@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyber Side — Security Reference</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070D1B;--surface:#0D1628;--card:#131E32;--border:#1C2B44;
+  --blue:#2D7FEA;--blue-dim:#1E3A5F;--blue-text:#93C5FD;
+  --cyan:#06B6D4;--cyan-dim:#0E3844;--cyan-text:#67E8F9;
+  --orange:#F97316;--orange-dim:#3D1E0A;--orange-text:#FCA874;
+  --purple:#7C3AED;--purple-dim:#2D1B5E;--purple-text:#C4B5FD;
+  --green:#10B981;--green-dim:#063B24;--green-text:#6EE7B7;
+  --red:#EF4444;--red-dim:#3B0E0E;--red-text:#FCA5A5;
+  --yellow:#F59E0B;--yellow-dim:#3B2707;--yellow-text:#FCD34D;
+  --t1:#E2E8F0;--t2:#94A3B8;--t3:#475569;--t4:#2D3F58;
+  --sidebar:260px;--mono:'Courier New',monospace
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;display:flex;min-height:100vh}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;z-index:100}
+.sb-header{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.sb-logo{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.sb-title{font-size:17px;font-weight:600;color:var(--t1)}
+.sb-sub{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.5}
+.sb-nav{padding:12px 0;flex:1}
+.sb-group{padding:6px 20px 4px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t4)}
+.sb-link{display:flex;align-items:center;gap:9px;padding:8px 20px;cursor:pointer;transition:all .15s;border-left:2px solid transparent;color:var(--t2);font-size:13px}
+.sb-link:hover{background:rgba(45,127,234,.08);color:var(--t1)}
+.sb-link.active{background:rgba(45,127,234,.12);color:var(--blue);border-left-color:var(--blue)}
+.sb-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+.sb-footer{padding:12px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--t4)}
+
+/* MAIN */
+#main{margin-left:var(--sidebar);flex:1;min-height:100vh}
+.section{display:none;padding:0}
+.section.active{display:block}
+
+/* SECTION HEADER */
+.sec-header{padding:28px 32px 20px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--surface) 0%,var(--bg) 100%)}
+.sec-eyebrow{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.sec-title{font-size:24px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.sec-desc{font-size:13px;color:var(--t2);line-height:1.6;max-width:680px}
+.sec-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-blue{background:var(--blue-dim);color:var(--blue-text)}
+.badge-cyan{background:var(--cyan-dim);color:var(--cyan-text)}
+.badge-orange{background:var(--orange-dim);color:var(--orange-text)}
+.badge-purple{background:var(--purple-dim);color:var(--purple-text)}
+.badge-green{background:var(--green-dim);color:var(--green-text)}
+.badge-red{background:var(--red-dim);color:var(--red-text)}
+
+/* TABS */
+.tab-bar{display:flex;gap:2px;padding:0 32px;border-bottom:1px solid var(--border);background:var(--surface);overflow-x:auto}
+.tab-btn{padding:11px 16px;font-size:12px;font-weight:500;color:var(--t3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s}
+.tab-btn:hover{color:var(--t2)}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-pane{display:none;padding:28px 32px}
+.tab-pane.active{display:block}
+
+/* CONTENT COMPONENTS */
+.infobox{background:var(--card);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--t2);line-height:1.7}
+.infobox.blue{border-left:3px solid var(--blue)}
+.infobox.orange{border-left:3px solid var(--orange)}
+.infobox.green{border-left:3px solid var(--green)}
+.infobox.purple{border-left:3px solid var(--purple)}
+.infobox.red{border-left:3px solid var(--red)}
+.infobox.cyan{border-left:3px solid var(--cyan)}
+.lbl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.sec-block{margin-bottom:24px}
+hr.div{border:none;border-top:1px solid var(--border);margin:20px 0}
+strong{color:var(--t1)}
+em{color:var(--t3);font-style:italic}
+
+/* GRID LAYOUTS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gauto{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.card-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:6px}
+.card-body{font-size:12px;color:var(--t2);line-height:1.55}
+.card-note{font-size:11px;color:var(--t3);margin-top:5px;font-style:italic}
+
+/* BULLETS */
+.pts{display:flex;flex-direction:column;gap:7px}
+.pt{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--t2);line-height:1.55}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.dot-blue{background:var(--blue)}.dot-orange{background:var(--orange)}
+.dot-green{background:var(--green)}.dot-red{background:var(--red)}.dot-purple{background:var(--purple)}
+
+/* TABLES */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+.data-table td{font-size:12px;padding:8px 10px;border-bottom:1px solid var(--border);color:var(--t2);vertical-align:top;line-height:1.5}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:rgba(255,255,255,.02)}
+.fw{font-weight:500;color:var(--t1)}
+.mono{font-family:var(--mono);font-size:11px;color:var(--t3)}
+
+/* PILLS / TAGS */
+.pill{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:12px;white-space:nowrap}
+.pill-blue{background:var(--blue-dim);color:var(--blue-text)}
+.pill-orange{background:var(--orange-dim);color:var(--orange-text)}
+.pill-green{background:var(--green-dim);color:var(--green-text)}
+.pill-red{background:var(--red-dim);color:var(--red-text)}
+.pill-purple{background:var(--purple-dim);color:var(--purple-text)}
+.pill-cyan{background:var(--cyan-dim);color:var(--cyan-text)}
+.pill-yellow{background:var(--yellow-dim);color:var(--yellow-text)}
+.pills-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+
+/* TACTIC PILLS */
+.tac-wrap{display:flex;flex-wrap:wrap;gap:5px}
+.tac-pill{font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;cursor:default}
+
+/* HIGHLIGHT QUOTE */
+.highlight{background:var(--card);border-radius:10px;padding:16px 20px;font-size:14px;font-weight:500;color:var(--t1);text-align:center;border:1px solid var(--border);line-height:1.6}
+.highlight-green{border-color:var(--green);color:var(--green-text);background:var(--green-dim)}
+
+/* ONION DIAGRAM */
+.onion-wrap{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+.onion{position:relative;width:280px;height:280px;flex-shrink:0}
+.ring{position:absolute;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;transition:all .2s}
+.ring:hover{filter:brightness(1.2)}
+.ring span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;pointer-events:none;padding:0 6px}
+.r7{width:280px;height:280px;background:rgba(231,76,60,.1);border:2px solid rgba(231,76,60,.3)}
+.r6{width:236px;height:236px;background:rgba(230,126,34,.1);border:2px solid rgba(230,126,34,.3)}
+.r5{width:196px;height:196px;background:rgba(241,196,15,.1);border:2px solid rgba(241,196,15,.3)}
+.r4{width:158px;height:158px;background:rgba(39,174,96,.12);border:2px solid rgba(39,174,96,.35)}
+.r3{width:122px;height:122px;background:rgba(6,182,212,.12);border:2px solid rgba(6,182,212,.35)}
+.r2{width:88px;height:88px;background:rgba(124,58,237,.15);border:2px solid rgba(124,58,237,.4)}
+.r1{width:54px;height:54px;background:rgba(45,127,234,.25);border:2px solid rgba(45,127,234,.6)}
+.ring.sel{filter:brightness(1.3);box-shadow:0 0 0 3px rgba(45,127,234,.4)}
+.r7 span{color:#F87171}.r6 span{color:#FB923C}.r5 span{color:#FCD34D}.r4 span{color:#6EE7B7}.r3 span{color:#67E8F9}.r2 span{color:#C4B5FD}.r1 span{color:#93C5FD}
+.detail-panel{flex:1;min-width:240px}
+.dp-title{font-size:18px;font-weight:700;color:var(--t1);margin-bottom:8px}
+.dp-badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;margin-bottom:10px}
+.dp-desc{font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:10px}
+.dp-threat{font-size:11px;color:var(--t3);font-style:italic;margin-bottom:12px}
+.tool-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tool-pill{font-size:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2px 8px;color:var(--t2)}
+.att-pill{font-size:10px;font-family:var(--mono);background:var(--purple-dim);color:var(--purple-text);border-radius:10px;padding:2px 7px}
+
+/* CONTROLS INTERACTIVE */
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:16px}
+.ctrl-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;transition:all .15s}
+.ctrl-card:hover{border-color:var(--blue)}
+.ctrl-card.active{border-color:var(--blue);background:var(--blue-dim)}
+.ctrl-name{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:3px}
+.ctrl-cat{font-size:11px;color:var(--t3)}
+.ctrl-detail{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;min-height:100px}
+.ctrl-detail-title{font-size:16px;font-weight:600;color:var(--t1);margin-bottom:12px}
+.ctrl-rows{display:grid;grid-template-columns:80px 1fr;gap:6px 12px;font-size:13px}
+.ctrl-label{color:var(--t3);font-weight:500;align-self:start;padding-top:1px}
+.ctrl-val{color:var(--t2);line-height:1.55}
+.ctrl-empty{font-size:13px;color:var(--t3);display:flex;align-items:center;justify-content:center;height:80px}
+
+/* CAT TABS */
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.cat-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--t2);font-size:12px;cursor:pointer;transition:all .15s}
+.cat-btn:hover{border-color:var(--blue);color:var(--t1)}
+.cat-btn.active{background:var(--blue-dim);color:var(--blue-text);border-color:var(--blue-dim)}
+
+/* AI CONTROL CARDS */
+.ai-ctrl-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.ai-ctrl-head{padding:11px 16px;background:var(--blue-dim);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.ai-ctrl-num{font-size:11px;font-weight:600;color:var(--t3);min-width:24px;font-family:var(--mono)}
+.ai-ctrl-title{font-size:14px;font-weight:600;color:var(--blue-text)}
+.ai-ctrl-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.sub-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:4px}
+.sub-text{font-size:12px;color:var(--t2);line-height:1.58}
+.ai-threat-block{background:var(--red-dim);border-radius:8px;padding:10px 12px;border-left:3px solid var(--red)}
+.ai-app-block{background:var(--blue-dim);border-radius:8px;padding:10px 12px;border-left:3px solid var(--blue)}
+.tools-line{border-top:1px solid var(--border);padding-top:9px;font-size:11px;color:var(--t3)}
+.tools-line b{color:var(--t2);font-weight:500}
+
+/* SCENARIO */
+.scenario{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.sc-head{background:rgba(255,255,255,.03);padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sc-title{font-size:13px;font-weight:600;color:var(--t1)}
+.sc-body{padding:12px 14px}
+.sc-step{display:flex;gap:10px;align-items:flex-start;padding:4px 0;font-size:12px;color:var(--t2);line-height:1.5}
+.sc-num{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-pass{background:var(--green-dim);color:var(--green)}
+.sc-block{background:var(--red-dim);color:var(--red)}
+
+/* NIST FUNCTIONS */
+.fn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fn-card{border-radius:10px;padding:12px 14px}
+.fn-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.fn-desc{font-size:11px;line-height:1.5}
+.fn-gov{background:var(--purple-dim)}.fn-gov .fn-name{color:var(--purple-text)}.fn-gov .fn-desc{color:#AFA9EC}
+.fn-id{background:var(--blue-dim)}.fn-id .fn-name{color:var(--blue-text)}.fn-id .fn-desc{color:#85B7EB}
+.fn-pr{background:var(--green-dim)}.fn-pr .fn-name{color:var(--green-text)}.fn-pr .fn-desc{color:#6EE7B7}
+.fn-de{background:var(--orange-dim)}.fn-de .fn-name{color:var(--orange-text)}.fn-de .fn-desc{color:#EF9F27}
+.fn-rs{background:var(--red-dim)}.fn-rs .fn-name{color:var(--red-text)}.fn-rs .fn-desc{color:#F0997B}
+.fn-rc{background:#4B1528}.fn-rc .fn-name{color:#F4C0D1}.fn-rc .fn-desc{color:#ED93B1}
+
+/* MISTAKE CARDS */
+.mistake{display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.mis-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.mis-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.mis-body{font-size:12px;color:var(--t2);line-height:1.5}
+
+/* ZT COMPARE */
+.zt-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.zt-old{background:var(--red-dim);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:12px 14px}
+.zt-new{background:var(--blue-dim);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:12px 14px}
+.zt-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:8px}
+.zt-item{font-size:12px;color:var(--t2);line-height:1.5;padding:2px 0}
+
+/* APT TABLE ORIGINS */
+.o-ru{background:#4A1B0C;color:#F5C4B3}
+.o-cn{background:#042C53;color:#B5D4F4}
+.o-kp{background:#412402;color:#FAC775}
+.o-ir{background:#173404;color:#C0DD97}
+.o-cr{background:#4B1528;color:#F4C0D1}
+
+/* USE CASE CARDS */
+.uc-card{border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.uc-r{background:rgba(239,68,68,.08);border-left:3px solid var(--red)}
+.uc-b{background:var(--blue-dim);border-left:3px solid var(--blue)}
+.uc-p{background:var(--purple-dim);border-left:3px solid var(--purple)}
+.uc-t{background:var(--green-dim);border-left:3px solid var(--green)}
+.uc-o{background:var(--orange-dim);border-left:3px solid var(--orange)}
+.uc-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:6px}
+.uc-body{font-size:12px;color:var(--t2);line-height:1.55}
+.uc-steps{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.uc-steps li{font-size:11px;color:var(--t2);padding-left:14px;position:relative}
+.uc-steps li::before{content:"→";position:absolute;left:0;color:var(--t3)}
+
+/* NAV GRID */
+.nav-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.nav-cell{border-radius:5px;padding:5px 4px;font-size:9px;font-weight:600;text-align:center;line-height:1.3}
+.nc-cov{background:var(--green);color:#fff}
+.nc-par{background:var(--yellow);color:#000}
+.nc-no{background:var(--card);color:var(--t3);border:1px solid var(--border)}
+.nc-apt{background:var(--purple);color:#fff}
+.nav-legend{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.nl-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t2)}
+.nl-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+
+/* FRAMEWORK LAYER VISUAL */
+.fw-layers{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.fw-layer{border-radius:8px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center}
+.fw-name{font-size:13px;font-weight:600}
+.fw-desc{font-size:11px;opacity:.8;margin-top:2px}
+
+/* PREVENTIVE CONTROLS SECTION */
+.prev-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.prev-head{padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.prev-num{font-size:11px;font-weight:700;color:var(--t3);font-family:var(--mono);width:28px;height:28px;border-radius:6px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.prev-title{font-size:15px;font-weight:600;color:var(--blue-text)}
+.prev-body{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.prev-col-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:6px}
+.prev-text{font-size:12px;color:var(--t2);line-height:1.6}
+.threat-tag{display:inline-block;background:var(--red-dim);color:var(--red-text);border-radius:4px;font-size:10px;padding:1px 7px;margin-bottom:6px;font-weight:600}
+.prev-tools{padding:10px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--t3)}
+
+/* AI-CYBER ARCH */
+.arch-layer{border-radius:10px;padding:12px 16px;margin-bottom:8px}
+.arch-items{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.arch-item{background:rgba(255,255,255,.08);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;transition:all .15s;border:1px solid rgba(255,255,255,.1)}
+.arch-item:hover{background:rgba(255,255,255,.15)}
+
+/* MATRIX CARDS */
+.mx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mx-card{border-radius:10px;padding:12px 14px}
+.mx-ent{background:var(--blue-dim);border:1px solid #1E3A5F}
+.mx-mob{background:var(--green-dim);border:1px solid #063B24}
+.mx-ics{background:var(--orange-dim);border:1px solid #3D1E0A}
+.mx-count{font-size:28px;font-weight:700;margin-bottom:4px}
+.mx-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.mx-desc{font-size:11px;line-height:1.5}
+.mx-ent .mx-count,.mx-ent .mx-name{color:var(--blue-text)}.mx-ent .mx-desc{color:#85B7EB}
+.mx-mob .mx-count,.mx-mob .mx-name{color:var(--green-text)}.mx-mob .mx-desc{color:#6EE7B7}
+.mx-ics .mx-count,.mx-ics .mx-name{color:var(--orange-text)}.mx-ics .mx-desc{color:#FCA874}
+
+/* SCROLLABLE TABLE WRAPPER */
+.table-wrap{overflow-x:auto}
+
+/* SMALL MOBILE */
+@media(max-width:900px){
+  :root{--sidebar:0px}
+  #sidebar{display:none}
+  #main{margin-left:0}
+  .g2,.g3,.g4,.fn-grid,.zt-grid,.prev-body,.onion-wrap,.mx-grid{grid-template-columns:1fr}
+  .onion{margin:0 auto}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">Cyber Side</div>
+    <div class="sb-title">Security Reference</div>
+    <div class="sb-sub">MITRE · NIST · DiD · Controls · AI Integration</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">Frameworks</div>
+    <div class="sb-link active" onclick="showSection('s1',this)"><span class="sb-icon">⚔️</span> MITRE ATT&CK</div>
+    <div class="sb-link" onclick="showSection('s6',this)"><span class="sb-icon">📐</span> NIST CSF 2.0</div>
+    <div class="sb-group">Controls</div>
+    <div class="sb-link" onclick="showSection('s2',this)"><span class="sb-icon">🔒</span> Classical Controls</div>
+    <div class="sb-link" onclick="showSection('s7',this)"><span class="sb-icon">🔐</span> Preventive Controls</div>
+    <div class="sb-group">Architecture</div>
+    <div class="sb-link" onclick="showSection('s4',this)"><span class="sb-icon">🧅</span> Defence in Depth</div>
+    <div class="sb-link" onclick="showSection('s3',this)"><span class="sb-icon">🤖</span> AI–Cyber Integration</div>
+    <div class="sb-group">AI Security</div>
+    <div class="sb-link" onclick="showSection('s5',this)"><span class="sb-icon">📋</span> AI Security Controls</div>
+  </nav>
+  <div class="sb-footer">v15 ATT&CK · NIST CSF 2.0 · EU AI Act</div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+<!-- ══════════════════════════════════════════
+     S1: MITRE ATT&CK
+══════════════════════════════════════════ -->
+<div class="section active" id="s1">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Framework 01</div>
+    <div class="sec-title">MITRE ATT&CK</div>
+    <div class="sec-desc">Adversarial Tactics, Techniques &amp; Common Knowledge — a globally accessible knowledge base of real-world adversary behaviours built from observed attack data.</div>
+    <div class="sec-meta">
+      <span class="badge badge-blue">v15 · 2024</span>
+      <span class="badge badge-cyan">Free &amp; Open</span>
+      <span class="badge badge-purple">Post-compromise Focus</span>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="showTab(this,'t1-overview')">Overview</div>
+    <div class="tab-btn" onclick="showTab(this,'t1-tactics')">14 Tactics</div>
+    <div class="tab-btn" onclick="showTab(this,'t1-techniques')">Techniques</div>
+    <div class="tab-btn" onclick="showTab(this,'t1-groups')">Groups &amp; Software</div>
+    <div class="tab-btn" onclick="showTab(this,'t1-usecases')">Use Cases</div>
+    <div class="tab-btn" onclick="showTab(this,'t1-navigator')">Navigator &amp; Tools</div>
+    <div class="tab-btn" onclick="showTab(this,'t1-compare')">vs Other Frameworks</div>
+  </div>
+
+  <!-- Overview -->
+  <div class="tab-pane active" id="t1-overview">
+    <div class="sec-block">
+      <div class="lbl">Origin &amp; Core Concept</div>
+      <div class="infobox blue">Developed by MITRE Corporation in <strong>2013</strong> as an internal project (<em>FMX — Fort Meade Experiment</em>), observing attacker behaviour on a sandboxed network. Made public in <strong>2015</strong>. It answers: <em>"What do attackers actually do — step by step — once they're inside?"</em> Unlike CVE (vulnerabilities) or NIST CSF (governance), ATT&amp;CK focuses on <strong>post-compromise behaviour</strong> and attacker tradecraft. It is a living knowledge base — updated ~twice yearly from real incidents and threat reports.</div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Three matrices</div>
+      <div class="mx-grid">
+        <div class="mx-card mx-ent">
+          <div class="mx-count">14</div>
+          <div class="mx-name">Enterprise</div>
+          <div class="mx-desc">~200 techniques · ~400 sub-techniques. Covers Windows, macOS, Linux, Cloud (AWS/Azure/GCP), SaaS, Containers. Most widely used matrix.</div>
+        </div>
+        <div class="mx-card mx-mob">
+          <div class="mx-count">14</div>
+          <div class="mx-name">Mobile</div>
+          <div class="mx-desc">iOS &amp; Android. Covers app-based attacks, network-based, physical access, MDM bypass, spyware (Pegasus-style).</div>
+        </div>
+        <div class="mx-card mx-ics">
+          <div class="mx-count">12</div>
+          <div class="mx-name">ICS</div>
+          <div class="mx-desc">Industrial control systems — SCADA, PLCs, HMIs. Power, water, oil &amp; gas, manufacturing OT. Ref: Stuxnet, Industroyer, Triton.</div>
+        </div>
+      </div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Key vocabulary</div>
+      <div class="g2">
+        <div class="card"><div class="card-title">TTP</div><div class="card-body"><strong>Tactics</strong> (goal) + <strong>Techniques</strong> (how) + <strong>Procedures</strong> (specific real-world instance). TTPs are the gold standard of threat intel — harder to change than IPs or hashes.</div></div>
+        <div class="card"><div class="card-title">Procedure</div><div class="card-body">A concrete, real-world example of a technique used by a specific group. e.g. "APT29 used PowerShell to download a payload from a C2 server."</div></div>
+        <div class="card"><div class="card-title">Mitigation</div><div class="card-body">ATT&amp;CK maps each technique to recommended defensive measures (MFA, credential hardening, network segmentation, etc.) via M#### IDs.</div></div>
+        <div class="card"><div class="card-title">Data Source</div><div class="card-body">What telemetry you need to detect a technique — process logs, network flow, registry events, file system activity, Windows Event IDs.</div></div>
+      </div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">What it is NOT</div>
+      <div class="pts">
+        <div class="pt"><div class="dot dot-red"></div><span><strong>Not a compliance framework</strong> — no certification, no mandate, no audit checkboxes.</span></div>
+        <div class="pt"><div class="dot dot-red"></div><span><strong>Not a linear kill chain</strong> — attackers skip, repeat, or reorder phases. It's a menu of behaviours, not a sequence.</span></div>
+        <div class="pt"><div class="dot dot-red"></div><span><strong>Not a vulnerability database</strong> — that's CVE/NVD. ATT&amp;CK covers behaviour regardless of specific CVE.</span></div>
+        <div class="pt"><div class="dot dot-red"></div><span><strong>Not a detection tool</strong> — it's a knowledge base. Detection engineering is built on top (Sigma rules, SIEM queries).</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14 Tactics -->
+  <div class="tab-pane" id="t1-tactics">
+    <div class="sec-block">
+      <div class="lbl">What are tactics?</div>
+      <div class="infobox blue">Tactics represent the adversary's <strong>objective</strong> at each phase — they answer <em>"Why is the attacker doing this?"</em>. The 14 Enterprise tactics follow a rough attacker progression from pre-compromise to impact. They are the columns of the ATT&amp;CK matrix; techniques are the rows underneath each column.</div>
+    </div>
+    <div class="tac-wrap" style="margin-bottom:20px">
+      <span class="tac-pill pill pill-purple">Reconnaissance</span>
+      <span class="tac-pill pill pill-purple">Resource Development</span>
+      <span class="tac-pill pill pill-blue">Initial Access</span>
+      <span class="tac-pill pill pill-blue">Execution</span>
+      <span class="tac-pill pill pill-green">Persistence</span>
+      <span class="tac-pill pill pill-green">Privilege Escalation</span>
+      <span class="tac-pill pill pill-orange">Defense Evasion</span>
+      <span class="tac-pill pill pill-orange">Credential Access</span>
+      <span class="tac-pill pill pill-red">Discovery</span>
+      <span class="tac-pill pill pill-red">Lateral Movement</span>
+      <span class="tac-pill pill pill-cyan">Collection</span>
+      <span class="tac-pill pill pill-cyan">C2</span>
+      <span class="tac-pill pill pill-yellow">Exfiltration</span>
+      <span class="tac-pill pill pill-yellow">Impact</span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Tactic</th><th>Phase</th><th>Attacker Goal</th><th>Example Technique</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">TA0043</td><td class="fw">Reconnaissance</td><td><span class="pill pill-purple">Pre</span></td><td>Gather target info before attacking</td><td>Phishing for info, scanning, OSINT</td></tr>
+          <tr><td class="mono">TA0042</td><td class="fw">Resource Development</td><td><span class="pill pill-purple">Pre</span></td><td>Build/buy infrastructure &amp; tools</td><td>Acquire domains, compromise accounts</td></tr>
+          <tr><td class="mono">TA0001</td><td class="fw">Initial Access</td><td><span class="pill pill-blue">Init</span></td><td>Get a foothold in the network</td><td>Spearphishing, drive-by, supply chain</td></tr>
+          <tr><td class="mono">TA0002</td><td class="fw">Execution</td><td><span class="pill pill-blue">Exec</span></td><td>Run malicious code</td><td>PowerShell, WMI, scripting engines</td></tr>
+          <tr><td class="mono">TA0003</td><td class="fw">Persistence</td><td><span class="pill pill-green">Post</span></td><td>Survive reboots &amp; detection</td><td>Scheduled tasks, registry run keys</td></tr>
+          <tr><td class="mono">TA0004</td><td class="fw">Privilege Escalation</td><td><span class="pill pill-green">Post</span></td><td>Gain higher-level permissions</td><td>Token impersonation, UAC bypass</td></tr>
+          <tr><td class="mono">TA0005</td><td class="fw">Defense Evasion</td><td><span class="pill pill-orange">Evade</span></td><td>Avoid detection &amp; security tools</td><td>Obfuscation, DLL sideloading, LOLBins</td></tr>
+          <tr><td class="mono">TA0006</td><td class="fw">Credential Access</td><td><span class="pill pill-orange">Evade</span></td><td>Steal usernames &amp; passwords</td><td>Mimikatz, keylogging, LSASS dump</td></tr>
+          <tr><td class="mono">TA0007</td><td class="fw">Discovery</td><td><span class="pill pill-red">Post</span></td><td>Map the environment internally</td><td>Network scanning, AD enumeration</td></tr>
+          <tr><td class="mono">TA0008</td><td class="fw">Lateral Movement</td><td><span class="pill pill-red">Post</span></td><td>Move through the network</td><td>Pass-the-hash, RDP, SMB</td></tr>
+          <tr><td class="mono">TA0009</td><td class="fw">Collection</td><td><span class="pill pill-cyan">Late</span></td><td>Gather data of interest</td><td>Keylogging, screen capture, email collect</td></tr>
+          <tr><td class="mono">TA0011</td><td class="fw">Command &amp; Control</td><td><span class="pill pill-cyan">Late</span></td><td>Communicate with compromised systems</td><td>DNS tunneling, Cobalt Strike beaconing</td></tr>
+          <tr><td class="mono">TA0010</td><td class="fw">Exfiltration</td><td><span class="pill pill-yellow">Impact</span></td><td>Steal data out of the network</td><td>FTP, cloud storage, encrypted channels</td></tr>
+          <tr><td class="mono">TA0040</td><td class="fw">Impact</td><td><span class="pill pill-yellow">Impact</span></td><td>Destroy, degrade, or ransom</td><td>Ransomware (T1486), wiper malware</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Techniques -->
+  <div class="tab-pane" id="t1-techniques">
+    <div class="sec-block">
+      <div class="lbl">Structure: Technique → Sub-technique</div>
+      <div class="infobox blue">Each tactic has multiple <strong>Techniques</strong> (T####) — the <em>how</em>. Each technique can have <strong>Sub-techniques</strong> (T####.001) for specific variants. Every technique page includes: Mitigations, Data Sources, Detection guidance, and real Procedure Examples cited from threat reports.</div>
+    </div>
+    <div class="sec-block">
+      <div class="lbl">Most-used techniques (high attacker prevalence)</div>
+      <div class="g2">
+        <div class="card"><div class="card-title"><span class="mono">T1059</span> — Command &amp; Scripting Interpreter</div><div class="card-body">Attacker runs code via PowerShell (.001), Bash (.004), Python (.006), VBScript (.005), Windows Cmd (.003). Used by nearly every APT. Sub-techniques make detection nuanced — each interpreter has different telemetry.</div></div>
+        <div class="card"><div class="card-title"><span class="mono">T1078</span> — Valid Accounts</div><div class="card-body">Stealing and reusing legitimate credentials to blend in with normal activity. Bypasses perimeter controls because access looks authorized. Why MFA alone is insufficient — attackers steal session tokens.</div></div>
+        <div class="card"><div class="card-title"><span class="mono">T1566</span> — Phishing</div><div class="card-body">Most common initial access technique globally. Sub-techniques: spearphish attachment (.001), spearphish link (.002), spearphish via service (.003). Enables malware delivery or credential harvesting.</div></div>
+        <div class="card"><div class="card-title"><span class="mono">T1055</span> — Process Injection</div><div class="card-body">Inject code into a legitimate process (explorer.exe, svchost.exe) to hide malicious activity and inherit its privileges. Evades AV/EDR tools that trust whitelisted processes.</div></div>
+        <div class="card"><div class="card-title"><span class="mono">T1027</span> — Obfuscated Files/Info</div><div class="card-body">Encode/encrypt/compress payloads to evade signature-based AV. Techniques: Base64 encoding, XOR encryption, steganography, packed executables. Paired with T1059 constantly.</div></div>
+        <div class="card"><div class="card-title"><span class="mono">T1486</span> — Data Encrypted for Impact</div><div class="card-body">The ransomware technique. Attacker encrypts files and demands payment for decryption key. Requires successful prior stages: initial access → lateral movement → privilege escalation before running.</div></div>
+        <div class="card"><div class="card-title"><span class="mono">T1110</span> — Brute Force</div><div class="card-body">Credential stuffing (.004), password spraying (.003), online guessing (.001). Password spray avoids account lockouts by trying one password against many accounts.</div></div>
+        <div class="card"><div class="card-title"><span class="mono">T1003</span> — OS Credential Dumping</div><div class="card-body">Extract credentials from LSASS memory, SAM database, NTDS.dit. Mimikatz is the canonical tool. Enables lateral movement via pass-the-hash or direct password reuse.</div></div>
+      </div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Detection components on every technique page</div>
+      <div class="g2">
+        <div class="card"><div class="card-title">Data Sources</div><div class="card-body">What telemetry to collect — e.g. "Process creation logs", "Windows Event ID 4688", "PowerShell Script Block Logging (EID 4104)", "Network flow", "Registry modification".</div></div>
+        <div class="card"><div class="card-title">Detection Notes</div><div class="card-body">Guidance on anomalies to look for. Not specific SIEM rules — the logic behind them. Pair with Sigma rule library for concrete queries.</div></div>
+        <div class="card"><div class="card-title">Mitigations (M####)</div><div class="card-body">Each technique links to structured Mitigations. e.g. M1032 = Multi-factor Authentication, M1026 = Privileged Account Management, M1030 = Network Segmentation.</div></div>
+        <div class="card"><div class="card-title">Procedure Examples</div><div class="card-body">Real named threat groups that used this technique — links to campaigns and software, cited from public threat reports (Mandiant, Crowdstrike, NSA advisories).</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Groups & Software -->
+  <div class="tab-pane" id="t1-groups">
+    <div class="sec-block">
+      <div class="lbl">Named threat actor clusters (G#### IDs)</div>
+      <div class="infobox blue">ATT&amp;CK tracks named threat actor clusters — APTs, criminal groups, hacktivists. Each group page lists: aliases, suspected origin, known targets, and <strong>every technique they've been observed using</strong>, cited from public threat reports.</div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Group</th><th>Aliases</th><th>Origin</th><th>Known For</th><th>Key Techniques</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">APT29</td><td>Cozy Bear, Midnight Blizzard</td><td><span class="pill o-ru">Russia (SVR)</span></td><td>SolarWinds, O365 compromise, cloud persistence</td><td class="mono">T1195, T1078, T1606</td></tr>
+          <tr><td class="fw">APT28</td><td>Fancy Bear, Forest Blizzard</td><td><span class="pill o-ru">Russia (GRU)</span></td><td>Election interference, NATO targets, credential theft</td><td class="mono">T1566, T1059.003, T1098</td></tr>
+          <tr><td class="fw">APT41</td><td>Double Dragon, Winnti</td><td><span class="pill o-cn">China (MSS)</span></td><td>Espionage + financial crime (dual mandate)</td><td class="mono">T1190, T1055, T1003</td></tr>
+          <tr><td class="fw">Lazarus Group</td><td>Hidden Cobra, ZINC</td><td><span class="pill o-kp">North Korea</span></td><td>SWIFT bank heists, crypto theft, WannaCry</td><td class="mono">T1486, T1071, T1059.005</td></tr>
+          <tr><td class="fw">FIN7</td><td>Carbanak, Carbon Spider</td><td><span class="pill o-cr">Criminal</span></td><td>Retail/hospitality POS malware, ransomware-as-a-service</td><td class="mono">T1204, T1059, T1547</td></tr>
+          <tr><td class="fw">APT35</td><td>Charming Kitten, Mint Sandstorm</td><td><span class="pill o-ir">Iran (IRGC)</span></td><td>Journalists, activists, academia, government targeting</td><td class="mono">T1566.002, T1078, T1071</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Software catalogue (S#### IDs) — tools &amp; malware</div>
+      <div class="g2">
+        <div class="card"><div class="card-title">Cobalt Strike <span class="mono" style="font-size:10px">S0154</span></div><div class="card-body">Commercial pen-test tool heavily abused by 100+ threat groups. Implements C2 beaconing, lateral movement, credential dumping, process injection. The "Kali Linux of APTs".</div></div>
+        <div class="card"><div class="card-title">Mimikatz <span class="mono" style="font-size:10px">S0002</span></div><div class="card-body">Credential dumping tool. Extracts plaintext passwords, NTLM hashes, Kerberos tickets from Windows LSASS memory. Essential to nearly every lateral movement operation.</div></div>
+        <div class="card"><div class="card-title">BloodHound <span class="mono" style="font-size:10px">S0521</span></div><div class="card-body">Active Directory attack path mapper. Used by both red teams and attackers to find the shortest path to Domain Admin through AD relationships and permissions.</div></div>
+        <div class="card"><div class="card-title">Emotet <span class="mono" style="font-size:10px">S0367</span></div><div class="card-body">Modular malware dropper / botnet. Delivered Ryuk and Conti ransomware payloads. Spreads via malicious macros in email attachments. Taken down 2021, returned 2022.</div></div>
+      </div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Campaigns (C#### IDs)</div>
+      <div class="infobox blue">Track named real-world intrusion events — linking groups, software, and techniques to a specific incident with a timeline. Example: <strong>C0024 SolarWinds Compromise</strong> — maps every technique APT29 used end-to-end, from supply chain poisoning (T1195) to cloud persistence (T1078). Useful for understanding full attacker kill chains.</div>
+    </div>
+  </div>
+
+  <!-- Use Cases -->
+  <div class="tab-pane" id="t1-usecases">
+    <div class="uc-card uc-r">
+      <div class="uc-title">Red Team / Adversary Emulation</div>
+      <div class="uc-body">Build realistic attack simulations that mimic real threat actors — not generic pen tests. ATT&amp;CK IDs make scope and findings precise and structured.</div>
+      <ul class="uc-steps"><li>Select target threat group (e.g. APT29)</li><li>Export their technique list from ATT&amp;CK</li><li>Build emulation plan step-by-step (MITRE publishes free plans)</li><li>Execute — test whether blue team detects each technique</li><li>Report by ATT&amp;CK ID for structured, comparable findings</li></ul>
+    </div>
+    <div class="uc-card uc-b">
+      <div class="uc-title">Blue Team / Detection Engineering</div>
+      <div class="uc-body">Map your existing SIEM/EDR detections to ATT&amp;CK to find blind spots. Coverage gaps drive your defensive roadmap.</div>
+      <ul class="uc-steps"><li>List every SIEM/EDR alert and tag it with a technique ID</li><li>Visualise in ATT&amp;CK Navigator — uncovered cells = gaps</li><li>Prioritise gaps by threat group relevance to your sector</li><li>Write Sigma rules / SIEM queries to fill high-priority gaps</li></ul>
+    </div>
+    <div class="uc-card uc-p">
+      <div class="uc-title">Purple Team</div>
+      <div class="uc-body">Red &amp; blue team working together — red executes a technique, blue validates detection in real-time. ATT&amp;CK provides the shared vocabulary so both teams talk the same language. Output: measured coverage percentage per technique.</div>
+    </div>
+    <div class="uc-card uc-t">
+      <div class="uc-title">Threat Intelligence</div>
+      <div class="uc-body">Structured tagging of threat reports with ATT&amp;CK IDs makes intel actionable and comparable across teams and vendors.</div>
+      <ul class="uc-steps"><li>Analyst reads threat report → tags each behaviour with T#### ID</li><li>Feed into SIEM/SOAR for automated detection rules</li><li>Compare threat actor profiles — which groups target your sector?</li><li>Share intel in STIX format across orgs / ISACs</li></ul>
+    </div>
+    <div class="uc-card uc-o">
+      <div class="uc-title">SOC Benchmarking</div>
+      <div class="uc-body">Report to leadership: <em>"We can detect 68% of Lazarus Group techniques. Q3 goal: 80%."</em> Turns abstract security posture into a measurable, communicable metric. Also used during SOC triage to answer: "what phase is the attacker in? what comes next?"</div>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="tab-pane" id="t1-navigator">
+    <div class="sec-block">
+      <div class="lbl">ATT&CK Navigator</div>
+      <div class="infobox blue">Free web app at <strong>mitre-attack.github.io/attack-navigator</strong>. Lets you create, colour, and layer ATT&amp;CK matrices. Core use: visualise what you detect vs what a threat actor uses — the overlap gap drives your priorities.</div>
+    </div>
+    <div class="sec-block">
+      <div class="lbl">Conceptual navigator view</div>
+      <div class="nav-grid">
+        <div class="nav-cell nc-cov">Recon</div><div class="nav-cell nc-no">Res Dev</div><div class="nav-cell nc-cov">Init Access</div><div class="nav-cell nc-cov">Execution</div><div class="nav-cell nc-par">Persist</div><div class="nav-cell nc-no">Priv Esc</div><div class="nav-cell nc-par">Def Evasion</div>
+        <div class="nav-cell nc-par">Cred Access</div><div class="nav-cell nc-cov">Discovery</div><div class="nav-cell nc-no">Lat Move</div><div class="nav-cell nc-par">Collection</div><div class="nav-cell nc-no">C2</div><div class="nav-cell nc-no">Exfil</div><div class="nav-cell nc-cov">Impact</div>
+        <div class="nav-cell nc-apt">APT29</div><div class="nav-cell nc-apt">APT29</div><div class="nav-cell nc-apt">APT29</div><div class="nav-cell nc-no">—</div><div class="nav-cell nc-apt">APT29</div><div class="nav-cell nc-apt">APT29</div><div class="nav-cell nc-apt">APT29</div>
+      </div>
+      <div class="nav-legend">
+        <div class="nl-item"><div class="nl-dot" style="background:var(--green)"></div>Detected by your controls</div>
+        <div class="nl-item"><div class="nl-dot" style="background:var(--yellow)"></div>Partial detection</div>
+        <div class="nl-item"><div class="nl-dot" style="background:var(--purple)"></div>Used by APT29</div>
+        <div class="nl-item"><div class="nl-dot nc-no" style="background:var(--card);border:1px solid var(--border)"></div>Gap / no coverage</div>
+      </div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">STIX / TAXII — machine-readable format</div>
+      <div class="infobox cyan">Full ATT&amp;CK knowledge base available as <strong>STIX 2.1 JSON</strong> (Structured Threat Information Expression). Ingested by SIEMs (Splunk, Elastic), SOAR platforms, and threat intel tools. TAXII servers allow automated syncing of updated ATT&amp;CK data. This is how vendors like CrowdStrike, Microsoft Defender, and SentinelOne auto-map alerts to ATT&amp;CK IDs.</div>
+    </div>
+    <div class="sec-block">
+      <div class="lbl">Companion tools &amp; integrations</div>
+      <div class="g2">
+        <div class="card"><div class="card-title">Sigma Rules</div><div class="card-body">Community SIEM detection rules, each tagged with ATT&amp;CK technique IDs. Translatable to Splunk, Elastic, QRadar, Chronicle, Microsoft Sentinel, etc. 3,000+ rules open-source.</div></div>
+        <div class="card"><div class="card-title">MITRE D3FEND</div><div class="card-body">Companion knowledge base of defensive techniques — mapped to ATT&amp;CK offence. "They do T1059 (PowerShell), so apply D3-PSA (Process Spawn Analysis)". Mirror image of ATT&amp;CK.</div></div>
+        <div class="card"><div class="card-title">Atomic Red Team</div><div class="card-body">Red Canary's open-source test library — atomic tests for each ATT&amp;CK technique. Run a test, verify your detection actually works. Integrates with Navigator for coverage tracking.</div></div>
+        <div class="card"><div class="card-title">CTID Emulation Plans</div><div class="card-body">MITRE's Center for Threat-Informed Defense publishes free full adversary emulation plans (APT29, FIN6, menuPass) ready to execute with step-by-step playbooks.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare -->
+  <div class="tab-pane" id="t1-compare">
+    <div class="sec-block">
+      <div class="infobox blue">These frameworks are <strong>complementary, not competing</strong>. Most mature security programs use all of them together — each answers a different question. Think of them as layered from governance → operations → implementation.</div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Framework</th><th>Creator</th><th>Focus</th><th>What it answers</th><th>Relation to ATT&CK</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">MITRE ATT&CK</td><td>MITRE</td><td>Adversary behaviour post-compromise</td><td>What do attackers do?</td><td>—</td></tr>
+          <tr><td class="fw">Cyber Kill Chain</td><td>Lockheed Martin</td><td>7-phase attack lifecycle</td><td>What stage is the attacker at?</td><td>ATT&amp;CK expands each Kill Chain phase into granular techniques. Use Kill Chain for narrative, ATT&amp;CK for detail.</td></tr>
+          <tr><td class="fw">NIST CSF 2.0</td><td>NIST</td><td>Governance &amp; risk management</td><td>How well do we manage cyber risk?</td><td>CSF's Detect + Respond functions are operationalised using ATT&amp;CK. NIST publishes official ATT&amp;CK→CSF mappings.</td></tr>
+          <tr><td class="fw">NIST SP 800-53</td><td>NIST</td><td>Security &amp; privacy controls catalogue</td><td>What controls should we have?</td><td>MITRE &amp; NIST publish a cross-walk: each ATT&amp;CK technique → relevant 800-53 controls.</td></tr>
+          <tr><td class="fw">MITRE D3FEND</td><td>MITRE</td><td>Defensive countermeasure techniques</td><td>What defences counter each attack?</td><td>Direct ATT&amp;CK companion. Offensive technique → mapped defensive technique ID.</td></tr>
+          <tr><td class="fw">CVE / NVD</td><td>MITRE / NIST</td><td>Vulnerability catalogue</td><td>What software is vulnerable?</td><td>ATT&amp;CK T1190 (Exploit Public App) references CVEs. CVE = what is broken; ATT&amp;CK = how it's used.</td></tr>
+          <tr><td class="fw">ISO 27001</td><td>ISO/IEC</td><td>ISMS governance &amp; certification</td><td>Are we following security best practices?</td><td>ATT&amp;CK used during risk assessments to populate threat scenarios for ISO 27001 Annex A controls.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Layered model — how they work together</div>
+      <div class="fw-layers">
+        <div class="fw-layer" style="background:var(--purple-dim);border:1px solid #4B2E8E"><div><div class="fw-name" style="color:var(--purple-text)">NIST CSF 2.0 / ISO 27001</div><div class="fw-desc" style="color:#AFA9EC">Top layer: governance, risk posture, executive communication</div></div></div>
+        <div class="fw-layer" style="background:var(--blue-dim);border:1px solid #1E3A5F"><div><div class="fw-name" style="color:var(--blue-text)">NIST SP 800-53 / CIS Controls</div><div class="fw-desc" style="color:#85B7EB">Middle layer: what controls and safeguards to implement</div></div></div>
+        <div class="fw-layer" style="background:var(--green-dim);border:1px solid #1A5C3A"><div><div class="fw-name" style="color:var(--green-text)">MITRE ATT&CK + D3FEND</div><div class="fw-desc" style="color:#6EE7B7">Operational layer: specific attacker behaviours to detect and counter</div></div></div>
+        <div class="fw-layer" style="background:var(--card);border:1px solid var(--border)"><div><div class="fw-name" style="color:var(--t2)">Sigma Rules / Atomic Red Team</div><div class="fw-desc" style="color:var(--t3)">Implementation layer: actual SIEM rules and test scripts that execute against infrastructure</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S2: CLASSICAL CONTROLS
+══════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Controls 02</div>
+    <div class="sec-title">Classical Cybersecurity Controls</div>
+    <div class="sec-desc">The four categories of security controls — Preventive, Detective, Corrective, and Administrative — layered to create defence in depth.</div>
+    <div class="sec-meta">
+      <span class="badge badge-blue">Preventive</span>
+      <span class="badge badge-orange">Detective</span>
+      <span class="badge badge-green">Corrective</span>
+      <span class="badge badge-purple">Administrative</span>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="showTab(this,'t2-all')">All Controls</div>
+    <div class="tab-btn" onclick="showTab(this,'t2-prev')">Preventive</div>
+    <div class="tab-btn" onclick="showTab(this,'t2-det')">Detective</div>
+    <div class="tab-btn" onclick="showTab(this,'t2-corr')">Corrective</div>
+    <div class="tab-btn" onclick="showTab(this,'t2-adm')">Administrative</div>
+  </div>
+
+  <div class="tab-pane active" id="t2-all">
+    <div class="cat-tabs" id="ctrlCatTabs2"></div>
+    <div class="ctrl-grid" id="ctrlGrid2"></div>
+    <div class="ctrl-detail" id="ctrlDetail2"><div class="ctrl-empty">← Click any control to see details</div></div>
+  </div>
+
+  <div class="tab-pane" id="t2-prev">
+    <div class="infobox blue" style="margin-bottom:20px">Preventive controls <strong>stop threats before they occur</strong>. They are the first line of defence — reducing the attack surface and making it harder for adversaries to gain a foothold.</div>
+    <div class="g2">
+      <div class="card"><div class="card-title">🛡️ Firewalls</div><div class="card-body">Filters network traffic by rules — allow/deny by IP, port, protocol. Stateful inspection tracks active sessions. WAF (Web Application Firewall) inspects HTTP payloads for attack patterns like SQLi and XSS. First perimeter barrier.</div><div class="card-note">Best use: Network edge; between untrusted internet and internal LAN</div></div>
+      <div class="card"><div class="card-title">🔑 Access Control</div><div class="card-body">MFA, RBAC, SSO, least-privilege — verify identity first, then grant only the minimum access needed. Role-based access assigns permissions by job function. Prevents unauthorized data/system access.</div><div class="card-note">Best use: Cloud IAM, Active Directory, privileged account protection</div></div>
+      <div class="card"><div class="card-title">🔐 Encryption</div><div class="card-body">AES-256 at rest, TLS 1.3 in transit, PKI for trust. Data is mathematically unreadable without the decryption key — useless to anyone who intercepts it. Protects confidentiality even if storage is compromised.</div><div class="card-note">Best use: Databases, email, APIs, storage — anywhere data leaves your perimeter</div></div>
+      <div class="card"><div class="card-title">🔧 Patching &amp; Hardening</div><div class="card-body">Apply CVE patches promptly, remove unused services and open ports, enforce CIS benchmark or STIG configuration baselines. Eliminates known weaknesses attackers actively exploit. Patch management = a DiD layer.</div><div class="card-note">Best use: All systems — especially internet-facing; monthly cycles minimum</div></div>
+      <div class="card"><div class="card-title">🦠 AV / EDR / XDR</div><div class="card-body">Antivirus uses signatures + heuristics. EDR adds live behavioral monitoring per endpoint and automated containment. XDR correlates signals across endpoint, network, identity, and cloud into one detection pipeline.</div><div class="card-note">Best use: All endpoints, servers; XDR correlates across the whole estate</div></div>
+      <div class="card"><div class="card-title">🔗 Segmentation</div><div class="card-body">VLANs, DMZ, micro-segmentation divide the network into isolated zones. Limits blast radius — attackers who breach one zone can't freely reach others. Critical for stopping ransomware spread.</div><div class="card-note">Best use: Critical assets (OT/SCADA, PII, finance) isolated from general network</div></div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t2-det">
+    <div class="infobox orange" style="margin-bottom:20px">Detective controls <strong>identify and alert on threats in progress</strong>. They cannot prevent attacks but provide visibility, enabling timely response. Without detectives, you're blind to breaches.</div>
+    <div class="g2">
+      <div class="card"><div class="card-title">📊 SIEM</div><div class="card-body">Aggregates logs from all sources (endpoints, firewalls, cloud, apps), correlates events, fires alerts on anomalies. The SOC's primary tool. Enables compliance reporting, threat hunting, and forensic investigation baseline.</div><div class="card-note">Best use: 24/7 SOC monitoring; compliance reporting; threat hunting</div></div>
+      <div class="card"><div class="card-title">🚨 IDS / IPS</div><div class="card-body">IDS (Intrusion Detection System) alerts on suspicious traffic patterns. IPS (Intrusion Prevention System) actively blocks it inline. Uses signature + anomaly-based detection. IPS must be tuned carefully to avoid blocking legitimate traffic.</div><div class="card-note">Best use: Core network backbone, cloud gateways, between DMZ and internal</div></div>
+      <div class="card"><div class="card-title">🔍 Vulnerability Scanning</div><div class="card-body">Automated scans (Nessus/OpenVAS) reveal unpatched CVEs and misconfigurations. Pen testing goes deeper with manual exploitation. "Find holes before attackers do" — continuous scanning is now the standard.</div><div class="card-note">Best use: Weekly automated scans; annual pen test; after every major change</div></div>
+      <div class="card"><div class="card-title">📝 Audit &amp; Logging</div><div class="card-body">Syslog, Windows Events, CloudTrail — tamper-proof record of who did what, when, from where. Essential for forensic investigation and legal proceedings. Also enables insider threat detection and compliance audits.</div><div class="card-note">Best use: Legal compliance (SOC 2, HIPAA); forensics; insider threat detection</div></div>
+      <div class="card"><div class="card-title">🍯 Honeypots</div><div class="card-body">Fake servers/services/credentials lure attackers. Any hit on a honeypot = confirmed malicious intent (no false positives). Used internally to detect lateral movement and externally to gather threat intelligence about attacker TTPs.</div><div class="card-note">Best use: Internal networks to catch lateral movement; threat intel collection</div></div>
+      <div class="card"><div class="card-title">🛑 DLP</div><div class="card-body">Data Loss Prevention inspects emails, web uploads, USB transfers — blocks or alerts when sensitive data leaves the org. Enforces data classification policies. Critical for regulatory compliance (GDPR, HIPAA) and IP protection.</div><div class="card-note">Best use: Finance, healthcare, legal sectors; cloud SaaS environments</div></div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t2-corr">
+    <div class="infobox green" style="margin-bottom:20px">Corrective controls <strong>respond to and recover from security incidents</strong>. They minimize damage, restore systems, and prevent recurrence. Often called "reactive" — they activate after a breach is detected.</div>
+    <div class="g3">
+      <div class="card"><div class="card-title">🚒 Incident Response</div><div class="card-body">NIST lifecycle: Prepare → Identify → Contain → Eradicate → Recover → Lessons Learned. Every org needs an IR plan. Speed of containment determines breach cost. IR playbooks define actions for each threat scenario.</div><div class="card-note">Activate on any confirmed breach or significant anomaly</div></div>
+      <div class="card"><div class="card-title">🔄 BCP / DR</div><div class="card-body">Business Continuity Planning and Disaster Recovery. Backups, failover sites (hot/warm/cold), defined RTO (Recovery Time Objective — how long can you be down?) and RPO (Recovery Point Objective — how much data can you lose?). Test regularly via drills.</div><div class="card-note">Ransomware, datacenter outage, natural disaster scenarios</div></div>
+      <div class="card"><div class="card-title">🔬 Forensics</div><div class="card-body">Disk/memory imaging, chain of custody, timeline reconstruction, root cause analysis. Determines exactly what happened, how far the attacker reached, and what was taken. Supports legal proceedings. Critical for preventing recurrence.</div><div class="card-note">Post-breach proceedings; understanding attacker TTPs</div></div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t2-adm">
+    <div class="infobox purple" style="margin-bottom:20px">Administrative controls are the <strong>governance and human layer</strong> — policies, training, and oversight. Technical controls mean nothing without policies backing them. People remain the most exploited attack vector.</div>
+    <div class="g3">
+      <div class="card"><div class="card-title">📋 Policies &amp; Standards</div><div class="card-body">AUP, password policy, ISO 27001, NIST CSF, SOC 2, GDPR — rules everyone must follow. Define what "secure" means for the organization. The foundation layer that all technical controls must align with.</div><div class="card-note">Foundation layer for all technical controls</div></div>
+      <div class="card"><div class="card-title">🎓 Security Awareness</div><div class="card-body">Phishing simulation, mandatory training, social engineering tests. Builds security culture. Finance/HR/executives are prime targets. Regular phishing simulations are the most effective training method. Human error causes ~80% of breaches.</div><div class="card-note">All staff; especially finance, HR, and executives</div></div>
+      <div class="card"><div class="card-title">📈 Risk Management</div><div class="card-body">Risk register, Business Impact Analysis, vendor assessments, third-party audits. Quantify and prioritize risks. Guides investment: where to spend the next security dollar for maximum risk reduction.</div><div class="card-note">Before major projects, vendor onboarding, audit cycles</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S3: AI-CYBER INTEGRATION
+══════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Architecture 03</div>
+    <div class="sec-title">AI–Cyber Integration</div>
+    <div class="sec-desc">How classical cybersecurity controls extend into AI systems — and the new attack surfaces unique to machine learning that have no direct classical counterpart.</div>
+    <div class="sec-meta">
+      <span class="badge badge-purple">AI Governance Layer</span>
+      <span class="badge badge-red">AI-Specific Threats</span>
+      <span class="badge badge-blue">Classical Foundation</span>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="showTab(this,'t3-arch')">Architecture</div>
+    <div class="tab-btn" onclick="showTab(this,'t3-threats')">AI-Specific Threats</div>
+    <div class="tab-btn" onclick="showTab(this,'t3-mapping')">Control Mapping</div>
+    <div class="tab-btn" onclick="showTab(this,'t3-gov')">AI Governance</div>
+  </div>
+  <div class="tab-pane active" id="t3-arch">
+    <div class="sec-block">
+      <div class="lbl">Four-layer architecture</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="arch-layer" style="background:var(--purple-dim);border:1px solid #4B2E8E">
+          <div style="font-size:13px;font-weight:600;color:var(--purple-text);margin-bottom:4px">AI Governance Layer</div>
+          <div style="font-size:12px;color:#AFA9EC;margin-bottom:8px">EU AI Act · NIST AI RMF · Explainability · Bias auditing · Accountability · Model cards</div>
+          <div class="arch-items">
+            <span class="arch-item" style="color:#C4B5FD">EU AI Act compliance</span>
+            <span class="arch-item" style="color:#C4B5FD">NIST AI RMF</span>
+            <span class="arch-item" style="color:#C4B5FD">Explainability (XAI)</span>
+            <span class="arch-item" style="color:#C4B5FD">Bias &amp; fairness auditing</span>
+            <span class="arch-item" style="color:#C4B5FD">Accountability chains</span>
+          </div>
+        </div>
+        <div class="arch-layer" style="background:var(--red-dim);border:1px solid #7F1D1D">
+          <div style="font-size:13px;font-weight:600;color:var(--red-text);margin-bottom:4px">AI-Specific Security Layer</div>
+          <div style="font-size:12px;color:#FCA5A5;margin-bottom:8px">New attack surface unique to ML — no direct classical counterpart</div>
+          <div class="arch-items">
+            <span class="arch-item" style="color:#FCA5A5">Prompt injection</span>
+            <span class="arch-item" style="color:#FCA5A5">Data poisoning</span>
+            <span class="arch-item" style="color:#FCA5A5">Model theft / extraction</span>
+            <span class="arch-item" style="color:#FCA5A5">Adversarial inputs</span>
+            <span class="arch-item" style="color:#FCA5A5">Model evasion</span>
+            <span class="arch-item" style="color:#FCA5A5">Membership inference</span>
+          </div>
+        </div>
+        <div class="arch-layer" style="background:var(--green-dim);border:1px solid #064E30">
+          <div style="font-size:13px;font-weight:600;color:var(--green-text);margin-bottom:4px">Classical→AI Control Mapping Layer</div>
+          <div style="font-size:12px;color:#6EE7B7;margin-bottom:8px">Classical controls reapplied with AI-specific extensions</div>
+          <div class="g2" style="gap:6px;font-size:11px;color:#6EE7B7">
+            <div>Firewall → <strong>AI API Gateway</strong> (rate-limit, prompt inspection)</div>
+            <div>RBAC → <strong>Model RBAC</strong> (query/train/weights tiers)</div>
+            <div>Encryption → <strong>Weight encryption</strong> + SGX enclaves</div>
+            <div>IDS → <strong>Anomaly detection</strong> on inference patterns</div>
+            <div>Patching → <strong>ML framework CVE patching</strong></div>
+            <div>BCP/IR → <strong>Model rollback</strong> + retraining pipelines</div>
+          </div>
+        </div>
+        <div class="arch-layer" style="background:var(--blue-dim);border:1px solid #1E3A5F">
+          <div style="font-size:13px;font-weight:600;color:var(--blue-text);margin-bottom:4px">Classical Cybersecurity Foundation</div>
+          <div style="font-size:12px;color:#85B7EB;margin-bottom:8px">Defence in depth — all 18 classical controls form the bedrock</div>
+          <div class="arch-items">
+            <span class="arch-item" style="color:#93C5FD">Preventive</span>
+            <span class="arch-item" style="color:#FCA874">Detective</span>
+            <span class="arch-item" style="color:#6EE7B7">Corrective</span>
+            <span class="arch-item" style="color:#C4B5FD">Administrative</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane" id="t3-threats">
+    <div class="g2">
+      <div class="card" style="border-left:3px solid var(--red)"><div class="card-title" style="color:var(--red-text)">🎯 Prompt Injection</div><div class="card-body">Hijacks LLM model behaviour via adversarial input. Attacker embeds instructions in user content that override system prompts. <em>"Ignore previous instructions and..."</em> — leads to data exfiltration, policy bypass, indirect injection via documents.</div><div class="card-note">Defence: Input sanitisation, WAF rules on prompts, output guardrails</div></div>
+      <div class="card" style="border-left:3px solid var(--orange)"><div class="card-title" style="color:var(--orange-text)">☠️ Data Poisoning</div><div class="card-body">Attacker injects malicious samples into training data to corrupt model behaviour — causing misclassification, backdoors, or bias. A backdoored model may behave normally until a specific trigger input activates the hidden behaviour.</div><div class="card-note">Defence: Data provenance checks, anomaly detection on training sets, differential privacy</div></div>
+      <div class="card" style="border-left:3px solid var(--purple)"><div class="card-title" style="color:var(--purple-text)">💰 Model Theft / Extraction</div><div class="card-body">Attacker queries a model API systematically to reconstruct a functional equivalent — stealing millions in training investment. Sometimes used to find a "clone" with fewer guardrails.</div><div class="card-note">Defence: Rate limiting, query monitoring, watermarking, output perturbation</div></div>
+      <div class="card" style="border-left:3px solid var(--yellow)"><div class="card-title" style="color:var(--yellow-text)">👁️ Adversarial Inputs</div><div class="card-body">Imperceptible perturbations to inputs (pixels, text tokens) cause misclassification. A stop sign with stickers can fool an autonomous vehicle CV model. Evades signature-based defences entirely since inputs look normal to humans.</div><div class="card-note">Defence: Adversarial training, input smoothing, ensemble methods, certified robustness</div></div>
+      <div class="card" style="border-left:3px solid var(--cyan)"><div class="card-title" style="color:var(--cyan-text)">🔎 Membership Inference</div><div class="card-body">Attacker determines whether a specific record was in the training set by querying the model. Violates privacy — reveals that a hospital record or private user data was used to train the model.</div><div class="card-note">Defence: Differential privacy, output perturbation, limiting confidence scores</div></div>
+      <div class="card" style="border-left:3px solid var(--green)"><div class="card-title" style="color:var(--green-text)">🐍 Pickle Bomb (Supply Chain)</div><div class="card-body">Malicious model files (.pkl) execute arbitrary OS code when loaded via <code style="font-family:var(--mono)">torch.load()</code>. A poisoned model file from HuggingFace Hub = RCE on the loading machine. The ML equivalent of a trojanized library.</div><div class="card-note">Defence: Use safetensors format, weights_only=True, scan models before loading</div></div>
+    </div>
+  </div>
+  <div class="tab-pane" id="t3-mapping">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Classical Control</th><th>Classical Role</th><th>AI Extension</th><th>AI-Specific Tool</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">Firewall / WAF</td><td>Block malicious network traffic</td><td>AI API Gateway: rate-limits per API key, WAF rules pattern-match prompt injection strings, blocks oversized inputs, filters outbound PII in responses</td><td>AWS API GW · Cloudflare WAF · NGINX</td></tr>
+          <tr><td class="fw">Access Control (RBAC)</td><td>Least-privilege access to systems</td><td>Model RBAC tiers: (1) End-user query-only, (2) ML engineer fine-tune, (3) Data scientist training data access, (4) Admin model weights + registry</td><td>AWS IAM · OAuth 2.0 · OPA</td></tr>
+          <tr><td class="fw">Encryption</td><td>Protect data at rest and in transit</td><td>Model weight encryption (AES-256, KMS). Secure enclaves (Intel SGX, AMD SEV) for inference. Homomorphic encryption for inference on encrypted inputs</td><td>AWS KMS · Intel SGX · TLS 1.3</td></tr>
+          <tr><td class="fw">AV / EDR</td><td>Detect malware on endpoints</td><td>ModelScan: scans model files for malicious code before loading. EDR on GPU inference servers catches cryptomining. XDR correlates model server behaviour with network logs</td><td>CrowdStrike · ModelScan · safetensors</td></tr>
+          <tr><td class="fw">Patching &amp; Hardening</td><td>Fix CVEs in OS and software</td><td>ML frameworks have CVEs (TensorFlow RCE bugs). Remove debug UIs (Jupyter, MLflow, TensorBoard). Use distroless containers. Pin dependency versions. Switch to safetensors</td><td>Snyk · pip-audit · Dependabot</td></tr>
+          <tr><td class="fw">Network Segmentation</td><td>Isolate network zones</td><td>Separate training cluster VPC from inference cluster. Model registry on internal subnet (never public). Zero Trust: inference server authenticates to registry with short-lived token. Block outbound from training jobs</td><td>Kubernetes NetworkPolicy · Istio · BeyondCorp</td></tr>
+          <tr><td class="fw">IDS / SIEM</td><td>Detect anomalies in traffic/logs</td><td>Monitor inference API for unusual query patterns (model extraction = high query rate). Alert on input/output policy violations. Detect training data exfiltration attempts</td><td>Splunk · Elastic · MLflow monitoring</td></tr>
+          <tr><td class="fw">BCP / DR</td><td>Recover business after disaster</td><td>Model rollback to previous checkpoint if poisoning detected. Retraining pipeline with clean data. Model versioning with integrity checksums. Canary deployments for gradual rollout</td><td>MLflow · DVC · Weights &amp; Biases</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="tab-pane" id="t3-gov">
+    <div class="sec-block">
+      <div class="lbl">AI Governance Layer</div>
+      <div class="infobox purple">AI governance sits <strong>above</strong> classical cybersecurity — it adds requirements around explainability, accountability, fairness, and regulatory compliance that have no counterpart in traditional IT security. The EU AI Act (2024) and NIST AI RMF (2023) are the primary frameworks.</div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-title">EU AI Act</div><div class="card-body">Risk-based regulation: Unacceptable risk (banned) → High risk (strict requirements) → Limited risk (transparency) → Minimal risk (voluntary). High-risk AI systems must demonstrate accuracy, robustness, and cybersecurity controls. Article 15 specifically mandates technical measures against data poisoning, adversarial inputs, and confidentiality attacks.</div></div>
+      <div class="card"><div class="card-title">NIST AI RMF</div><div class="card-body">AI Risk Management Framework — voluntary guidance with four functions: Govern, Map, Measure, Manage. Complementary to NIST CSF but AI-specific. Introduces concepts of "trustworthy AI" covering validity, reliability, safety, security, explainability, privacy, and fairness.</div></div>
+      <div class="card"><div class="card-title">Explainability (XAI)</div><div class="card-body">Regulators and courts require that AI decisions affecting people can be explained. Techniques: LIME, SHAP, attention visualization, counterfactual explanations. Security angle: unexplainable models are harder to audit for backdoors.</div></div>
+      <div class="card"><div class="card-title">Model Cards &amp; AI BOM</div><div class="card-body">Model cards document a model's purpose, training data, performance, limitations, and intended use. AI Bill of Materials (AI-BOM) lists all data sources, pre-trained models, libraries, and versions — the AI equivalent of SBOM (Software Bill of Materials) for supply chain security.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S4: DEFENCE IN DEPTH
+══════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Architecture 04</div>
+    <div class="sec-title">Defence in Depth</div>
+    <div class="sec-desc">A layered security strategy — multiple independent defensive controls stacked so that if one layer fails, the next one stops the attacker. Originally a military doctrine; adopted by NSA for cybersecurity in the early 2000s.</div>
+    <div class="sec-meta">
+      <span class="badge badge-blue">7 Layers</span>
+      <span class="badge badge-orange">People · Process · Technology</span>
+      <span class="badge badge-green">NIST · CIS · ISO 27001</span>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="showTab(this,'t4-overview')">Overview</div>
+    <div class="tab-btn" onclick="showTab(this,'t4-layers')">Layers (Interactive)</div>
+    <div class="tab-btn" onclick="showTab(this,'t4-principles')">Core Principles</div>
+    <div class="tab-btn" onclick="showTab(this,'t4-scenarios')">Attack Scenarios</div>
+    <div class="tab-btn" onclick="showTab(this,'t4-modern')">Modern DiD</div>
+    <div class="tab-btn" onclick="showTab(this,'t4-mistakes')">Common Mistakes</div>
+    <div class="tab-btn" onclick="showTab(this,'t4-frameworks')">Framework Mapping</div>
+  </div>
+
+  <div class="tab-pane active" id="t4-overview">
+    <div class="sec-block">
+      <div class="infobox orange">A <strong>layered security strategy</strong> — multiple independent defensive controls stacked so that if one layer fails, the next one stops the attacker. No single control is perfect; DiD assumes breach at every layer and ensures <strong>redundancy of protection</strong>.</div>
+    </div>
+    <div class="highlight-green highlight" style="margin:16px 0">"If an attacker breaks through one control, they immediately face another — until they run out of time, tools, or patience."</div>
+    <div class="sec-block">
+      <div class="lbl">Three pillars</div>
+      <div class="g3">
+        <div class="card"><div class="card-title">👥 People</div><div class="card-body">Security-aware users, trained admins, defined roles, least-privilege culture. Humans are the most exploited layer — and the hardest to patch.</div><div class="card-note">e.g. phishing training, IR team, CISO</div></div>
+        <div class="card"><div class="card-title">📋 Process</div><div class="card-body">Policies, procedures, change management, incident response plans, patch management cadence, access review cycles.</div><div class="card-note">e.g. MFA policy, vulnerability SLAs, change control</div></div>
+        <div class="card"><div class="card-title">⚙️ Technology</div><div class="card-body">Security tools layered across physical, network, endpoint, application, and data — no single vendor, no single point of failure.</div><div class="card-note">e.g. Firewall + EDR + DLP + SIEM</div></div>
+      </div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Why it matters</div>
+      <div class="pts">
+        <div class="pt"><div class="dot dot-orange"></div><span><strong>Average attacker dwell time</strong>: ~16 days (Mandiant 2023). Layers buy time to detect before damage occurs.</span></div>
+        <div class="pt"><div class="dot dot-orange"></div><span><strong>Most breaches exploit 1–2 missing controls</strong> — DiD ensures no single gap equals full compromise.</span></div>
+        <div class="pt"><div class="dot dot-orange"></div><span><strong>Ransomware attacks</strong> succeed when lateral movement is unimpeded — network segmentation (a DiD layer) stops the spread.</span></div>
+        <div class="pt"><div class="dot dot-orange"></div><span>DiD maps to the <strong>ATT&amp;CK kill chain</strong> — each layer blocks specific tactics, forcing the attacker to use more techniques and create more detectable noise.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t4-layers">
+    <div class="lbl" style="margin-bottom:12px">Click a ring to explore that layer</div>
+    <div class="onion-wrap">
+      <div class="onion">
+        <div class="ring r7" onclick="selectLayer(7)" id="ring7"><span>Physical</span></div>
+        <div class="ring r6" onclick="selectLayer(6)" id="ring6"><span>Perimeter</span></div>
+        <div class="ring r5" onclick="selectLayer(5)" id="ring5"><span>Network</span></div>
+        <div class="ring r4" onclick="selectLayer(4)" id="ring4"><span>Endpoint</span></div>
+        <div class="ring r3" onclick="selectLayer(3)" id="ring3"><span>App</span></div>
+        <div class="ring r2" onclick="selectLayer(2)" id="ring2"><span>Identity</span></div>
+        <div class="ring r1" onclick="selectLayer(1)" id="ring1"><span>Data</span></div>
+      </div>
+      <div class="detail-panel" id="did-detail-panel">
+        <div class="dp-title" style="color:var(--t3)">Select a layer</div>
+        <div class="dp-desc" style="color:var(--t3)">Click any ring on the diagram to see full details for that layer — controls, tools, ATT&amp;CK techniques it addresses, and the primary threat it defends against.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t4-principles">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Principle</th><th>What It Means</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">Layering</td><td>Stack multiple independent controls — attacker must defeat all, not just one</td><td>Firewall → IDS → EDR → SIEM alert</td></tr>
+          <tr><td class="fw">Least Privilege</td><td>Users &amp; systems get only the access they need — nothing more</td><td>Finance team can't access engineering servers</td></tr>
+          <tr><td class="fw">Separation of Duties</td><td>No single person has complete control over a critical process</td><td>Dev can't deploy AND approve to production</td></tr>
+          <tr><td class="fw">Fail Secure</td><td>If a system fails, it defaults to denied/locked state, not open</td><td>Firewall crashes → all traffic dropped, not allowed</td></tr>
+          <tr><td class="fw">Assume Breach</td><td>Design every layer as if the previous one has already been compromised</td><td>Segment network even though perimeter firewall exists</td></tr>
+          <tr><td class="fw">Diversity of Controls</td><td>Use different vendors/technologies per layer — same product = same vuln</td><td>Palo Alto firewall + CrowdStrike EDR (not one vendor)</td></tr>
+          <tr><td class="fw">Redundancy</td><td>Duplicate critical controls so one failure doesn't create a gap</td><td>Two AV engines on email gateway</td></tr>
+          <tr><td class="fw">Defence by Obscurity (limited)</td><td>Reduce attacker knowledge but never rely on it alone</td><td>Non-standard ports as one additional measure, not the only one</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t4-scenarios">
+    <div class="scenario">
+      <div class="sc-head"><div class="sc-title">Ransomware Attack — DiD in Action</div><span class="badge badge-red">High Impact</span></div>
+      <div class="sc-body">
+        <div class="sc-step"><div class="sc-num sc-pass">1</div><span><strong>Perimeter layer blocks</strong> most phishing emails — email gateway filters 95% of malicious attachments</span></div>
+        <div class="sc-step"><div class="sc-num sc-block">2</div><span>User opens a convincing spearphish → <strong>initial access achieved</strong> (perimeter layer bypassed)</span></div>
+        <div class="sc-step"><div class="sc-num sc-pass">3</div><span><strong>Endpoint EDR</strong> detects the macro execution (T1059.001) → alert fired, automatic quarantine attempted</span></div>
+        <div class="sc-step"><div class="sc-num sc-block">4</div><span>Attacker uses LOLBin (living-off-the-land) technique to evade EDR → endpoint layer partially bypassed</span></div>
+        <div class="sc-step"><div class="sc-num sc-pass">5</div><span><strong>Network segmentation</strong> stops lateral movement — attacker can only reach the one VLAN the infected endpoint is in</span></div>
+        <div class="sc-step"><div class="sc-num sc-pass">6</div><span><strong>SIEM correlates</strong> the failed lateral movement attempts → SOC analyst investigates within minutes</span></div>
+        <div class="sc-step"><div class="sc-num sc-pass">7</div><span><strong>Outcome</strong>: One endpoint compromised, isolated quickly. No spread. Immutable backups available. RTO &lt; 2 hours.</span></div>
+      </div>
+    </div>
+    <div class="scenario">
+      <div class="sc-head"><div class="sc-title">Credential Theft / Account Takeover</div><span class="badge badge-orange">Identity Attack</span></div>
+      <div class="sc-body">
+        <div class="sc-step"><div class="sc-num sc-block">1</div><span>Attacker obtains credentials from a leaked database → <strong>valid username/password</strong></span></div>
+        <div class="sc-step"><div class="sc-num sc-pass">2</div><span><strong>MFA (identity layer)</strong> blocks login — attacker can't authenticate without second factor</span></div>
+        <div class="sc-step"><div class="sc-num sc-block">3</div><span>MFA fatigue attack: 50 push notifications → user accidentally approves → MFA bypassed</span></div>
+        <div class="sc-step"><div class="sc-num sc-pass">4</div><span><strong>UEBA / Conditional Access</strong> flags unusual login location (country mismatch) → additional verification required</span></div>
+        <div class="sc-step"><div class="sc-num sc-pass">5</div><span><strong>PAM system</strong> — privileged account has JIT access; attacker can't escalate with standard account</span></div>
+        <div class="sc-step"><div class="sc-num sc-pass">6</div><span><strong>Outcome</strong>: Breach detected and contained at identity layer. Access revoked, incident logged for forensics.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t4-modern">
+    <div class="sec-block">
+      <div class="lbl">Zero Trust vs Perimeter Security</div>
+      <div class="zt-grid">
+        <div class="zt-old">
+          <div class="zt-title">Traditional Perimeter Model</div>
+          <div class="zt-item">🏰 "Trust but verify" — inside the network = trusted</div>
+          <div class="zt-item">🌐 Hard perimeter firewall = primary defence</div>
+          <div class="zt-item">💥 Once inside, attacker moves freely</div>
+          <div class="zt-item">📡 VPN provides blanket network access</div>
+        </div>
+        <div class="zt-new">
+          <div class="zt-title">Zero Trust Architecture</div>
+          <div class="zt-item">🔍 "Never trust, always verify" — every request authenticated</div>
+          <div class="zt-item">🆔 Identity is the new perimeter</div>
+          <div class="zt-item">📱 Device health + user identity + context = access decision</div>
+          <div class="zt-item">🔒 Micro-segmentation limits blast radius even inside</div>
+        </div>
+      </div>
+      <div class="infobox blue" style="margin-top:10px">Zero Trust doesn't replace DiD — it <strong>modernises it</strong>. DiD says "stack controls at each layer." Zero Trust says "verify identity and health at every layer, every time." Combined: every layer authenticates and authorises before granting access, regardless of network location.</div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Modern cloud-era additions</div>
+      <div class="g2">
+        <div class="card"><div class="card-title">CASB</div><div class="card-body">Cloud Access Security Broker — sits between users and cloud apps. Enforces policy, DLP, threat detection for SaaS (O365, Salesforce, Dropbox). Replaces traditional proxy functions in cloud-first environments.</div></div>
+        <div class="card"><div class="card-title">SASE</div><div class="card-body">Secure Access Service Edge — combines SD-WAN + SSE (SWG, CASB, ZTNA, FWaaS) into a cloud-delivered service. Security follows the user, not the network perimeter. Vendors: Zscaler, Netskope, Palo Alto Prisma.</div></div>
+        <div class="card"><div class="card-title">XDR</div><div class="card-body">Extended Detection &amp; Response — correlates telemetry across endpoint, network, identity, cloud into one detection pipeline. Replaces siloed SIEM+EDR+NDR. Vendors: CrowdStrike Falcon, Microsoft Defender XDR, SentinelOne Singularity.</div></div>
+        <div class="card"><div class="card-title">CNAPP</div><div class="card-body">Cloud-Native Application Protection Platform — combines CSPM + CWPP + CIEM. Secures cloud configs, workloads, and IAM permissions. The application and data layers for cloud-native workloads.</div></div>
+        <div class="card"><div class="card-title">BAS</div><div class="card-body">Breach &amp; Attack Simulation — continuously and automatically tests whether DiD controls actually work. Replaces annual pen tests with ongoing validation. Vendors: Cymulate, AttackIQ, SafeBreach.</div></div>
+        <div class="card"><div class="card-title">Deception Technology</div><div class="card-body">Honeypots, canary tokens, fake credentials — placed in every layer. If triggered = definite breach indicator. Low false-positive rate, extremely high-value detection. Vendors: Attivo, CounterCraft.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t4-mistakes">
+    <div class="mistake"><div class="mis-icon">🏰</div><div><div class="mis-title">Hard shell, soft interior</div><div class="mis-body">Heavy perimeter security, almost nothing inside. Once attacker bypasses firewall (via phishing, VPN exploit) they move freely. No segmentation, no internal monitoring. Classic 2010s posture — still extremely common today.</div></div></div>
+    <div class="mistake"><div class="mis-icon">🔁</div><div><div class="mis-title">Same vendor across all layers</div><div class="mis-body">Single-vendor strategy seems simpler but means one vulnerability or bypass defeats every layer simultaneously. DiD requires control diversity — different vendors per layer.</div></div></div>
+    <div class="mistake"><div class="mis-icon">📋</div><div><div class="mis-title">Controls exist but aren't monitored</div><div class="mis-body">Firewall deployed, IDS deployed, logs generated — but no SIEM, no SOC, nobody reviewing alerts. Controls that produce unreviewed logs don't provide effective defence.</div></div></div>
+    <div class="mistake"><div class="mis-icon">🔑</div><div><div class="mis-title">MFA as the only identity layer</div><div class="mis-body">MFA is critical but insufficient alone. MFA fatigue attacks, SIM swapping, and adversary-in-the-middle proxies bypass it. Add conditional access, device health checks, and UEBA for full identity layer protection.</div></div></div>
+    <div class="mistake"><div class="mis-icon">🗂️</div><div><div class="mis-title">Flat network</div><div class="mis-body">No segmentation = lateral movement is trivial. Ransomware encrypts the whole estate in hours. Segment by business function, sensitivity, and blast radius. Every network should have at least 3 zones.</div></div></div>
+    <div class="mistake"><div class="mis-icon">📦</div><div><div class="mis-title">Unpatched internal systems</div><div class="mis-body">Perimeter is hardened but internal servers run 3-year-old patches. Attackers exploit internal vulnerabilities after initial access. Patch management is itself a DiD layer — it must cover internal systems too.</div></div></div>
+    <div class="mistake"><div class="mis-icon">🏭</div><div><div class="mis-title">Ignoring the data layer</div><div class="mis-body">All layers protect the network but data itself is unclassified, unencrypted at rest, no DLP. An attacker who reaches data can exfiltrate freely. Classify and protect the asset you're actually defending.</div></div></div>
+    <div class="mistake"><div class="mis-icon">🔬</div><div><div class="mis-title">Never testing your controls</div><div class="mis-body">DiD assumed to work but never validated. Annual pen tests are insufficient — run continuous BAS, red team exercises, and tabletop simulations. Untested controls often don't work as expected in real incidents.</div></div></div>
+  </div>
+
+  <div class="tab-pane" id="t4-frameworks">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Framework</th><th>Relation to DiD</th><th>Key Overlap</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">NIST CSF 2.0</td><td>DiD implements the Protect, Detect, Respond, Recover functions. CSF is the governance layer; DiD is the operational implementation of controls.</td><td>PR.AC (access control), DE.CM (continuous monitoring), RS.MI (mitigation)</td></tr>
+          <tr><td class="fw">MITRE ATT&CK</td><td>Each ATT&amp;CK tactic is mitigated by a specific DiD layer. Map techniques → find the responsible DiD layer for blocking them.</td><td>Physical→TA0001, Network→TA0008, Endpoint→TA0002, Identity→TA0006</td></tr>
+          <tr><td class="fw">Zero Trust (NIST SP 800-207)</td><td>Zero Trust is DiD applied to identity and access. "Never trust, always verify" is the identity layer taken to its logical extreme and applied everywhere.</td><td>Every DiD layer adds a Zero Trust verification checkpoint</td></tr>
+          <tr><td class="fw">CIS Controls v8</td><td>CIS Controls are DiD controls organized into Implementation Groups. IG1 = basic DiD (essential hygiene); IG2 = intermediate; IG3 = advanced DiD.</td><td>Controls 1–18 map directly to DiD layers by function</td></tr>
+          <tr><td class="fw">ISO 27001</td><td>Annex A controls implement DiD layers. Risk assessment determines which layers need which controls for your specific threat landscape.</td><td>A.8 (assets), A.9 (access), A.12 (ops security), A.13 (comms), A.14 (dev)</td></tr>
+          <tr><td class="fw">IEC 62443</td><td>DiD adapted for industrial/OT — defines security levels (SL 1–4) across zones and conduits. OT equivalent of DiD with availability as the priority.</td><td>Zones = network segmentation, Conduits = controlled access paths between zones</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">DiD layer → ATT&CK tactic mapping</div>
+      <div class="g2">
+        <div class="card"><div class="card-title">Physical layer</div><div class="card-body">Blocks TA0001 (physical initial access), insider threat. Controls: badge readers, CCTV, mantrap, server room locks, tamper-evident seals, media destruction.</div></div>
+        <div class="card"><div class="card-title">Perimeter / Network</div><div class="card-body">Blocks TA0001 (network initial access), TA0011 (C2 beaconing), TA0010 (exfiltration). Controls: Firewall, IPS, DNS filtering, egress proxy, email security gateway.</div></div>
+        <div class="card"><div class="card-title">Endpoint</div><div class="card-body">Blocks TA0002 (execution), TA0003 (persistence), TA0004 (privilege escalation), TA0005 (defense evasion). Controls: EDR, AV, app whitelisting, patch management.</div></div>
+        <div class="card"><div class="card-title">Identity</div><div class="card-body">Blocks TA0006 (credential access), TA0008 (lateral movement). Controls: MFA, PAM/JIT, conditional access, UEBA, SSO, identity governance.</div></div>
+        <div class="card"><div class="card-title">Application</div><div class="card-body">Blocks TA0001 (web app exploit), TA0002 (script in app). Controls: WAF, SAST/DAST/SCA, secure SDLC, input validation, API gateway, RASP.</div></div>
+        <div class="card"><div class="card-title">Data</div><div class="card-body">Blocks TA0009 (collection), TA0010 (exfiltration), TA0040 (impact/ransomware). Controls: DLP, encryption at rest/transit, data classification, immutable backups.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S5: AI SECURITY CONTROLS (Executive Summary)
+══════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="sec-header">
+    <div class="sec-eyebrow">AI Security 05</div>
+    <div class="sec-title">AI Security Controls</div>
+    <div class="sec-desc">Comprehensive preventive controls mapped to AI components across the full ML lifecycle — from data collection to deployment. Based on NIST AI RMF, EU AI Act, OWASP, and industry best practices.</div>
+    <div class="sec-meta">
+      <span class="badge badge-blue">NIST AI RMF</span>
+      <span class="badge badge-red">EU AI Act Art. 15</span>
+      <span class="badge badge-orange">OWASP GenAI</span>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="showTab(this,'t5-controls')">Control Categories</div>
+    <div class="tab-btn" onclick="showTab(this,'t5-table')">AI Component Map</div>
+    <div class="tab-btn" onclick="showTab(this,'t5-guidance')">Implementation</div>
+    <div class="tab-btn" onclick="showTab(this,'t5-maturity')">By Org Size</div>
+  </div>
+
+  <div class="tab-pane active" id="t5-controls">
+    <div class="ai-ctrl-card">
+      <div class="ai-ctrl-head"><div class="ai-ctrl-num">01</div><div class="ai-ctrl-title">Access Control (Authentication &amp; Authorization)</div></div>
+      <div class="ai-ctrl-body">
+        <div><div class="sub-lbl">Definition</div><div class="sub-text">Ensuring only authorized entities (users, services) can access AI data, models, and interfaces. Includes identity management, RBAC, MFA. Applicable across all stages — data storage, model registry, deployment infrastructure, APIs, user interfaces.</div></div>
+        <div class="ai-threat-block"><div class="sub-lbl">Attacks Mitigated</div><div class="sub-text">Prevents unauthorized model tampering or data theft. Thwarts attackers trying to download/modify model files (enabling model theft or malicious weight injection). Stops insiders from querying or exfiltrating sensitive training data.</div></div>
+        <div class="ai-app-block"><div class="sub-lbl">AI Implementation</div><div class="sub-text">Model RBAC tiers: (1) End-user query-only, (2) ML engineer fine-tune, (3) Data scientist training data, (4) Admin weights + registry. Certificate-based mutual TLS for model registries. Signed tokens for model-serving APIs. OPA (Open Policy Agent) for centralized policy enforcement.</div></div>
+        <div class="tools-line"><b>Frameworks:</b> NIST SP 800-53 AC family · ISO/IEC 27001 A.9 · OWASP ASVS · AWS IAM · Google Cloud IAM</div>
+      </div>
+    </div>
+    <div class="ai-ctrl-card">
+      <div class="ai-ctrl-head"><div class="ai-ctrl-num">02</div><div class="ai-ctrl-title">Data Encryption &amp; Privacy</div></div>
+      <div class="ai-ctrl-body">
+        <div><div class="sub-lbl">Definition</div><div class="sub-text">Protecting data confidentiality and integrity using encryption (AES-256 at rest, TLS 1.3 in transit) and privacy-preserving techniques (differential privacy). Covers training datasets, model artifacts, and API communication channels.</div></div>
+        <div class="ai-threat-block"><div class="sub-lbl">Attacks Mitigated</div><div class="sub-text">Prevents data exposure if storage is breached (PII leakage from training data). Stops man-in-the-middle attacks on API/model queries. Differential privacy reduces membership inference attack risk — prevents adversary from determining if a record was in training data.</div></div>
+        <div class="ai-app-block"><div class="sub-lbl">AI Implementation</div><div class="sub-text">Model weight encryption at rest (S3 SSE-KMS, Azure Blob encryption). All inference API calls over TLS 1.3 — prompts may contain PII. Secure enclaves (Intel SGX, AMD SEV) run inference in hardware-protected memory. Homomorphic encryption allows inference on encrypted inputs without decrypting.</div></div>
+        <div class="tools-line"><b>Frameworks:</b> NIST SP 800-53 SC family · ISO/IEC 27002 A.10 · ISO/IEC 27018 (cloud data) · AWS KMS · Intel SGX</div>
+      </div>
+    </div>
+    <div class="ai-ctrl-card">
+      <div class="ai-ctrl-head"><div class="ai-ctrl-num">03</div><div class="ai-ctrl-title">Input Validation &amp; Sanitization</div></div>
+      <div class="ai-ctrl-body">
+        <div><div class="sub-lbl">Definition</div><div class="sub-text">Rigorously checking and cleansing all external inputs before use. Covers training data ingestion and runtime inputs (user queries, sensor data). For generative AI, treat user prompts as untrusted code — validate everything.</div></div>
+        <div class="ai-threat-block"><div class="sub-lbl">Attacks Mitigated</div><div class="sub-text">Thwarts prompt injection (malicious inputs altering model behaviour) and data poisoning (malicious training samples). Prevents injection of adversarial content into the model pipeline at any stage.</div></div>
+        <div class="ai-app-block"><div class="sub-lbl">AI Implementation</div><div class="sub-text">Schema checks and type constraints during data preprocessing. Content filters / allowlists for LLM prompts — strip or reject disallowed tokens. Google Model Armor or open-source guards as screening layer. Validate source data against known schemas, detect anomalies before training ingestion.</div></div>
+        <div class="tools-line"><b>Frameworks:</b> OWASP Top 10 (Injection, RCE) · NIST SP 800-53 SI-10 · Google Model Armor · OWASP GenAI Top 10</div>
+      </div>
+    </div>
+    <div class="ai-ctrl-card">
+      <div class="ai-ctrl-head"><div class="ai-ctrl-num">04</div><div class="ai-ctrl-title">Adversarial Defence (Model Robustness)</div></div>
+      <div class="ai-ctrl-body">
+        <div><div class="sub-lbl">Definition</div><div class="sub-text">Techniques to make models resilient against adversarial examples or poisoning. Includes adversarial training (augmenting training data with perturbed inputs) and robustness testing. Applied during Model Training and Model Validation phases.</div></div>
+        <div class="ai-threat-block"><div class="sub-lbl">Attacks Mitigated</div><div class="sub-text">Prevents evasion attacks (adversarial perturbations causing misclassification) and poisoning during training (injected malicious samples). DP-SGD (differentially private stochastic gradient descent) limits single-sample influence.</div></div>
+        <div class="ai-app-block"><div class="sub-lbl">AI Implementation</div><div class="sub-text">Use CleverHans, Foolbox libraries for adversarial training. Validate models against FGSM, PGD attacks during QA. Maintain internal red team to continuously attack models. NIST recommends periodic adversarial red-teaming on LLMs. Use ensembles or randomized preprocessing to increase unpredictability.</div></div>
+        <div class="tools-line"><b>Frameworks:</b> NIST ATLAS · OWASP GenAI · CleverHans · Foolbox · DP-SGD (TensorFlow Privacy)</div>
+      </div>
+    </div>
+    <div class="ai-ctrl-card">
+      <div class="ai-ctrl-head"><div class="ai-ctrl-num">05</div><div class="ai-ctrl-title">Model Validation &amp; Integrity Checks</div></div>
+      <div class="ai-ctrl-body">
+        <div><div class="sub-lbl">Definition</div><div class="sub-text">Ensuring the model itself remains untampered and performs as intended. Includes verifying model provenance, cryptographic signing of model artifacts, and thorough validation testing covering performance, bias, and security.</div></div>
+        <div class="ai-threat-block"><div class="sub-lbl">Attacks Mitigated</div><div class="sub-text">Detects model poisoning or tampering — e.g. if an attacker replaces a model file with a backdoored version. NIST warns that fine-tuning can "break established safety and security controls" — validate all updates.</div></div>
+        <div class="ai-app-block"><div class="sub-lbl">AI Implementation</div><div class="sub-text">Use checksums or digital signatures on model binaries (FIPS DSS). CI/CD pipelines with malware scans on model files and reproducibility checks. Secure model registry with access control. Attestations (SGX or cloud attestation) for deployed containers. Track model lineage, verify third-party models via fingerprinting.</div></div>
+        <div class="tools-line"><b>Frameworks:</b> NIST SP 800-53 CM family · ISO/IEC 27001 A.12 · MITRE ATLAS · MLflow model registry · DVC</div>
+      </div>
+    </div>
+    <div class="ai-ctrl-card">
+      <div class="ai-ctrl-head"><div class="ai-ctrl-num">06</div><div class="ai-ctrl-title">Supply Chain Security</div></div>
+      <div class="ai-ctrl-body">
+        <div><div class="sub-lbl">Definition</div><div class="sub-text">Safeguarding against risks from external sources — third-party datasets, pre-trained models, libraries, and cloud dependencies used in the AI pipeline. The AI equivalent of SolarWinds-style supply chain attacks now targets ML artifacts.</div></div>
+        <div class="ai-threat-block"><div class="sub-lbl">Attacks Mitigated</div><div class="sub-text">Prevents hidden backdoors in pre-trained models or poisoned training datasets from external sources. Unverified models from HuggingFace Hub could contain pickle bombs or backdoored weights.</div></div>
+        <div class="ai-app-block"><div class="sub-lbl">AI Implementation</div><div class="sub-text">Maintain AI-BOM (AI Bill of Materials) listing all data sources, model libraries, and versions. Require cryptographic signatures/checksums on downloaded models and datasets. SCA (Software Composition Analysis) tools scan containers and libraries. Use container registries that enforce image scanning. Version pinning prevents supply chain drift.</div></div>
+        <div class="tools-line"><b>Frameworks:</b> ISO/IEC 27001 A.15 · NIST SCRM · CSA STAR · SBOM/SLSA · ModelScan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t5-table">
+    <div class="lbl">AI Component → Key Preventive Controls</div>
+    <div class="table-wrap" style="margin-top:8px">
+      <table class="data-table">
+        <thead><tr><th>AI Component</th><th>Key Preventive Controls</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">Data Collection</td><td>Data validation, provenance checks, input sanitisation; secure data ingestion channels (TLS, VPN); anomaly detection on incoming data</td></tr>
+          <tr><td class="fw">Data Storage</td><td>Encryption at rest (AES-256), access control (RBAC, MFA), DLP classification, regular immutable backups, key management (HSM/KMS)</td></tr>
+          <tr><td class="fw">Model Training</td><td>Secure compute environment (isolated VPCs, GPU clusters), adversarial training, vetted training data, artifact signing, DP-SGD for privacy</td></tr>
+          <tr><td class="fw">Model Validation</td><td>Robustness testing (adversarial tests: FGSM, PGD), performance &amp; bias audits, model signing verification, membership inference testing</td></tr>
+          <tr><td class="fw">Model Deployment / Inference</td><td>API security (gateway, OAuth/JWT auth, rate-limits), secure CI/CD pipeline, container security (scanning, patching, distroless images)</td></tr>
+          <tr><td class="fw">User Interface</td><td>Frontend security (HTTPS, input validation, CSRF/XSS protection), restrict PII in inputs, output sanitization before rendering</td></tr>
+          <tr><td class="fw">Monitoring</td><td>Logging of all inputs/outputs, anomaly detection on usage patterns and drift, alerting on policy violations, immutable log storage</td></tr>
+          <tr><td class="fw">Model Update / Maintenance</td><td>Change control, re-testing after patches/fine-tuning, retraining with security reviews, rollback capability with signed checkpoints</td></tr>
+          <tr><td class="fw">Supply Chain</td><td>AI-BOM for models/data, vendor risk assessment, dependency scanning, digital provenance (SLSA), model registry access control</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t5-guidance">
+    <div class="sec-block">
+      <div class="lbl">Implementation principles</div>
+      <div class="pts">
+        <div class="pt"><div class="dot dot-blue"></div><span><strong>Defence-in-Depth:</strong> Combine multiple controls. Encrypt data AND restrict access AND monitor usage. Never rely on a single control.</span></div>
+        <div class="pt"><div class="dot dot-blue"></div><span><strong>Shift Left:</strong> Integrate security early in the AI development lifecycle — schema checks in data collection, threat modelling at design, security in CI/CD, not just at deployment.</span></div>
+        <div class="pt"><div class="dot dot-blue"></div><span><strong>Regular Testing:</strong> Both NIST AI RMF and the EU AI Act stress continuous assessment. Red-team model prompts, validate controls with adversarial tests, run periodic compliance audits.</span></div>
+        <div class="pt"><div class="dot dot-blue"></div><span><strong>Least Privilege &amp; Zero Trust:</strong> Default-deny. The inference server must authenticate to the model registry even on the same internal network — every request verified.</span></div>
+        <div class="pt"><div class="dot dot-blue"></div><span><strong>Document trade-offs:</strong> Stronger encryption adds latency. Adversarial training reduces clean-data accuracy. Input filtering reduces usability. These trade-offs must be explicitly accepted by stakeholders.</span></div>
+      </div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Residual risks — no control is foolproof</div>
+      <div class="infobox red">New AI-specific threats are evolving constantly — jailbreaks of LLM filters, novel adversarial techniques, supply chain attacks targeting model hubs. Technical controls reduce attack likelihood but cannot eliminate zero-day vulnerabilities or sophisticated social engineering. <strong>Model hallucinations and alignment failures</strong> may slip through purely technical defences — requiring human oversight and update processes. EU AI Act Article 15 requires ongoing risk management, not a one-time implementation.</div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t5-maturity">
+    <div class="g3">
+      <div class="card" style="border-top:3px solid var(--green)"><div class="card-title" style="color:var(--green-text)">🚀 Startups / Small Teams</div><div class="card-body">
+        <div class="pts">
+          <div class="pt"><div class="dot dot-green"></div><span>Enforce MFA on all admin accounts</span></div>
+          <div class="pt"><div class="dot dot-green"></div><span>Encrypt all sensitive data by default (use cloud provider defaults)</span></div>
+          <div class="pt"><div class="dot dot-green"></div><span>Basic schema validation on data inputs</span></div>
+          <div class="pt"><div class="dot dot-green"></div><span>Isolate AI resources per environment (dev/prod)</span></div>
+          <div class="pt"><div class="dot dot-green"></div><span>Track all AI tools in use — prevent shadow AI</span></div>
+          <div class="pt"><div class="dot dot-green"></div><span>Formalize basic access logging</span></div>
+          <div class="pt"><div class="dot dot-green"></div><span>No sensitive data in public prompts (AUP)</span></div>
+        </div>
+      </div></div>
+      <div class="card" style="border-top:3px solid var(--blue)"><div class="card-title" style="color:var(--blue-text)">🏢 Mid-size Companies</div><div class="card-body">
+        <div class="pts">
+          <div class="pt"><div class="dot dot-blue"></div><span>Formal MLOps security with CI/CD gates</span></div>
+          <div class="pt"><div class="dot dot-blue"></div><span>Automate model and data scanning</span></div>
+          <div class="pt"><div class="dot dot-blue"></div><span>Formalise RBAC roles and entitlement reviews</span></div>
+          <div class="pt"><div class="dot dot-blue"></div><span>Regular pen tests and red-team exercises on AI</span></div>
+          <div class="pt"><div class="dot dot-blue"></div><span>Supply-chain governance (AI-BOM)</span></div>
+          <div class="pt"><div class="dot dot-blue"></div><span>Adopt NIST AI RMF or ISO/IEC 42001</span></div>
+          <div class="pt"><div class="dot dot-blue"></div><span>AI-specific security training for ML engineers</span></div>
+        </div>
+      </div></div>
+      <div class="card" style="border-top:3px solid var(--purple)"><div class="card-title" style="color:var(--purple-text)">🏛️ Enterprises</div><div class="card-body">
+        <div class="pts">
+          <div class="pt"><div class="dot dot-purple"></div><span>Dedicated AI security architects</span></div>
+          <div class="pt"><div class="dot dot-purple"></div><span>Enterprise-wide AI governance framework</span></div>
+          <div class="pt"><div class="dot dot-purple"></div><span>Specialized ML security monitoring tooling</span></div>
+          <div class="pt"><div class="dot dot-purple"></div><span>GDPR + EU AI Act + ISO 27001/42001 compliance</span></div>
+          <div class="pt"><div class="dot dot-purple"></div><span>Third-party certifications and external audits</span></div>
+          <div class="pt"><div class="dot dot-purple"></div><span>Continuous adversarial red-teaming program</span></div>
+          <div class="pt"><div class="dot dot-purple"></div><span>Layered security operations with AIOps</span></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S6: NIST CSF 2.0
+══════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Framework 06</div>
+    <div class="sec-title">NIST Cybersecurity Framework 2.0</div>
+    <div class="sec-desc">A flexible, outcome-based framework to help organisations understand, reduce, and communicate cybersecurity risk. Released February 2024 — now applicable to all organisations, not just critical infrastructure.</div>
+    <div class="sec-meta">
+      <span class="badge badge-purple">Released Feb 2024</span>
+      <span class="badge badge-blue">Voluntary (but widely required)</span>
+      <span class="badge badge-green">6 Core Functions</span>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="showTab(this,'t6-overview')">Overview</div>
+    <div class="tab-btn" onclick="showTab(this,'t6-functions')">6 Functions</div>
+    <div class="tab-btn" onclick="showTab(this,'t6-keypoints')">Key Points</div>
+    <div class="tab-btn" onclick="showTab(this,'t6-usage')">Who Uses It</div>
+  </div>
+
+  <div class="tab-pane active" id="t6-overview">
+    <div class="sec-block">
+      <div class="lbl">Why it exists</div>
+      <div class="infobox purple">Created after a 2013 US executive order following major infrastructure cyberattacks. Originally for critical infrastructure (power grids, water, finance). <strong>CSF 2.0 (Feb 2024)</strong> now applies to all organisations of any size or sector. Gives a common language for managing cybersecurity risk — no single law mandating this, so a voluntary but widely adopted standard filled the gap.</div>
+    </div>
+    <div class="sec-block">
+      <div class="lbl">What it does</div>
+      <div class="infobox blue">Provides a flexible, outcome-based framework to help organisations <strong>understand, reduce, and communicate</strong> cybersecurity risk. It is not a checklist or compliance law — it's a structured approach to ask: <em>"What are we doing, how well are we doing it, and where do we need to improve?"</em> Maps to other standards (ISO 27001, COBIT, SOC 2) so you can align without starting over.</div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="lbl">Version evolution</div>
+      <div class="g3">
+        <div class="card"><div class="card-title">v1.0 — 2013</div><div class="card-body">Original release. 5 core functions (no Govern). Critical infrastructure focus. Established the IPDRR model: Identify, Protect, Detect, Respond, Recover.</div></div>
+        <div class="card"><div class="card-title">v1.1 — 2018</div><div class="card-body">Added supply chain risk management (SCRM), authentication clarifications, self-assessment guidance, and improved cyber resilience integration.</div></div>
+        <div class="card" style="border-color:var(--purple)"><div class="card-title" style="color:var(--purple-text)">v2.0 — Feb 2024 ✦ Current</div><div class="card-body">Added <strong>Govern</strong> as a 6th function (major change). Expanded supply chain scope. Technology-neutral design. Now explicitly covers all sectors, not just critical infrastructure.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t6-functions">
+    <div class="lbl" style="margin-bottom:12px">The 6 core functions — CSF 2.0 added "Govern"</div>
+    <div class="fn-grid">
+      <div class="fn-card fn-gov"><div class="fn-name">🏛️ Govern <span style="font-size:10px;background:rgba(255,255,255,.15);border-radius:8px;padding:1px 6px;margin-left:4px">NEW in 2.0</span></div><div class="fn-desc">Organisation-wide cybersecurity strategy, roles, policy, and risk oversight. Sets the context for all other functions. Includes board-level accountability, supply chain risk management, and cybersecurity program governance.</div></div>
+      <div class="fn-card fn-id"><div class="fn-name">🔍 Identify</div><div class="fn-desc">Know your assets, risks, and business environment. Asset inventory, risk assessment, business impact analysis. You cannot protect what you don't know exists.</div></div>
+      <div class="fn-card fn-pr"><div class="fn-name">🛡️ Protect</div><div class="fn-desc">Safeguards — access control, training and awareness, data security, platform security, technology infrastructure resilience. Preventive controls in action.</div></div>
+      <div class="fn-card fn-de"><div class="fn-name">📡 Detect</div><div class="fn-desc">Continuous monitoring to find anomalies and incidents. Adverse event analysis, continuous monitoring program. Time-to-detect is critical — every day undetected = more damage.</div></div>
+      <div class="fn-card fn-rs"><div class="fn-name">⚡ Respond</div><div class="fn-desc">Act on detected incidents — contain, analyse, communicate. Incident management, incident analysis, incident response reporting and communication. Speed of response determines breach cost.</div></div>
+      <div class="fn-card fn-rc"><div class="fn-name">🔄 Recover</div><div class="fn-desc">Restore services; learn and improve after incidents. Incident recovery plan execution, incident recovery communication. RTO/RPO targets drive investment here.</div></div>
+    </div>
+    <hr class="div">
+    <div class="sec-block">
+      <div class="infobox blue">Each function breaks into <strong>Categories</strong> (e.g. "Asset Management") and then <strong>Subcategories</strong> — ~106 total outcome statements across the framework (e.g. "GV.OC-01: Organizational mission is understood and informs cybersecurity risk management"). These are concrete outcomes, not tool requirements — technology-neutral by design.</div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t6-keypoints">
+    <div class="pts">
+      <div class="pt"><div class="dot dot-purple"></div><span><strong>Voluntary, not mandatory</strong> — but widely required by contracts, regulators (CISA directives), and cyber insurers who often reference it in underwriting.</span></div>
+      <div class="pt"><div class="dot dot-purple"></div><span><strong>Tiers (1–4)</strong> — measure how mature your risk management practices are: Tier 1 Partial → Tier 2 Risk Informed → Tier 3 Repeatable → Tier 4 Adaptive. Not a score, just a gauge for self-assessment.</span></div>
+      <div class="pt"><div class="dot dot-purple"></div><span><strong>Profiles</strong> — a "Current Profile" shows where you are today; a "Target Profile" shows where you want to be. The gap between them drives your security roadmap and budget justification.</span></div>
+      <div class="pt"><div class="dot dot-purple"></div><span><strong>Supply chain focus expanded in 2.0</strong> — you now explicitly manage risk from vendors, partners, and third-party software. SCRM is integrated throughout all six functions, not just a separate concern.</span></div>
+      <div class="pt"><div class="dot dot-purple"></div><span><strong>Technology-neutral</strong> — works for cloud, OT/ICS, AI systems, small businesses, and government equally. The framework defines outcomes, not tools or technologies.</span></div>
+      <div class="pt"><div class="dot dot-purple"></div><span><strong>Govern function is the integrator</strong> — new in 2.0, it provides context for all other functions. Without governance, the other five functions lack direction, accountability, and resource allocation.</span></div>
+      <div class="pt"><div class="dot dot-purple"></div><span><strong>Free mapping tables</strong> — NIST publishes cross-references to ISO 27001, COBIT, CIS Controls, NIST SP 800-53, and ATT&amp;CK so you can align multiple frameworks without duplicate work.</span></div>
+      <div class="pt"><div class="dot dot-purple"></div><span><strong>AI integration</strong> — CSF 2.0 aligns with NIST AI RMF (2023). The Govern function explicitly covers AI risk management practices, and AI systems can be profiled using CSF just like any other technology.</span></div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t6-usage">
+    <div class="g2">
+      <div class="card"><div class="card-title">🏗️ Enterprises</div><div class="card-body">Benchmark security posture, communicate risk to the board using CSF language ("We're at Tier 2 Detect, targeting Tier 3 by Q3"), align security budget to identified gaps using Target vs Current Profile analysis.</div></div>
+      <div class="card"><div class="card-title">🏬 SMBs</div><div class="card-body">Use the free NIST Small Business Quick Start Guide as a lightweight entry point. Start with IG1-equivalent controls, focus on Identify + Protect first. Cloud provider managed services map naturally to CSF functions.</div></div>
+      <div class="card"><div class="card-title">📊 GRC / Auditors</div><div class="card-body">Map existing controls to CSF subcategories; cross-reference ISO 27001 and SOC 2 using the NIST mapping tables. Generate gap analysis reports showing which subcategory outcomes are met, partially met, or not met.</div></div>
+      <div class="card"><div class="card-title">🏛️ Regulators / Govt</div><div class="card-body">Used as a reference baseline for sector-specific rules (HIPAA, FISMA, CISA directives). CISA's cross-sector cybersecurity performance goals are aligned to CSF outcomes. Federal contractors often must demonstrate CSF alignment.</div></div>
+      <div class="card"><div class="card-title">🛡️ CISOs / Security Leaders</div><div class="card-body">Speak business language: "Our Current Profile is Tier 2 across all functions; the Target Profile requires us to reach Tier 3 in Detect and Respond — here's the gap, here's what it costs, here's the risk if we don't."</div></div>
+      <div class="card"><div class="card-title">🤖 AI Developers</div><div class="card-body">Map AI system security to CSF functions. Govern = AI governance board; Identify = model inventory and risk assessment; Protect = access control on model weights; Detect = inference anomaly monitoring; Respond = model incident response playbook.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S7: PREVENTIVE CONTROLS (AI-Focused)
+══════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="sec-header">
+    <div class="sec-eyebrow">Controls 07</div>
+    <div class="sec-title">Preventive Controls — Classical &amp; AI</div>
+    <div class="sec-desc">Six core preventive controls examined in depth: their classical function and how each extends into AI/ML systems, with specific threats, AI implementations, and tooling.</div>
+    <div class="sec-meta">
+      <span class="badge badge-blue">6 Core Controls</span>
+      <span class="badge badge-red">AI Threat Context</span>
+      <span class="badge badge-cyan">Classical + AI</span>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="showTab(this,'t7-all')">All Controls</div>
+    <div class="tab-btn" onclick="showTab(this,'t7-fw')">01 Firewall</div>
+    <div class="tab-btn" onclick="showTab(this,'t7-ac')">02 Access Control</div>
+    <div class="tab-btn" onclick="showTab(this,'t7-enc')">03 Encryption</div>
+    <div class="tab-btn" onclick="showTab(this,'t7-patch')">04 Patching</div>
+    <div class="tab-btn" onclick="showTab(this,'t7-edr')">05 AV/EDR/XDR</div>
+    <div class="tab-btn" onclick="showTab(this,'t7-seg')">06 Segmentation</div>
+  </div>
+
+  <div class="tab-pane active" id="t7-all">
+    <div id="prevCtrlsContainer"></div>
+  </div>
+
+  <div class="tab-pane" id="t7-fw">
+    <div class="prev-card">
+      <div class="prev-head"><div class="prev-num">01</div><div class="prev-title">Firewall / WAF</div></div>
+      <div class="prev-body">
+        <div><div class="prev-col-title">Classical function</div><div class="prev-text">Filters network traffic by rules — allow/deny by IP, port, protocol. Stateful inspection tracks active sessions. WAF (Web Application Firewall) inspects HTTP payloads for attack patterns such as SQL injection, XSS, and command injection.</div></div>
+        <div>
+          <div class="threat-tag">AI Threat</div>
+          <div class="prev-col-title">In AI Systems</div>
+          <div class="prev-text">AI API gateway acts as the model's perimeter. Rate-limits requests per user/API key. WAF rules pattern-match prompt injection strings in request bodies (e.g. "ignore previous instructions", "DAN mode"). Blocks oversized inputs designed to overflow model context windows. Also filters outbound responses to prevent data leakage — stops the model from echoing back sensitive training data.</div>
+        </div>
+      </div>
+      <div class="prev-tools"><b>Tools &amp; tech:</b> AWS API Gateway · Cloudflare WAF · NGINX · Azure API Management · Apigee</div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t7-ac">
+    <div class="prev-card">
+      <div class="prev-head"><div class="prev-num">02</div><div class="prev-title">Access Control (RBAC / MFA)</div></div>
+      <div class="prev-body">
+        <div><div class="prev-col-title">Classical function</div><div class="prev-text">MFA, RBAC, SSO, least privilege — verify identity first, then grant only the minimum access needed. Role-based access assigns permissions by job function, not individual. Prevents unauthorized access to systems and data at the authentication and authorization layer.</div></div>
+        <div>
+          <div class="threat-tag">AI Threat</div>
+          <div class="prev-col-title">In AI Systems</div>
+          <div class="prev-text">Model RBAC creates 4 distinct tiers: (1) End user — query only. (2) ML engineer — fine-tune. (3) Data scientist — access training data. (4) Admin — model weights and registry. Query attribution logs every prompt with the user ID. Least privilege: a customer-facing chatbot service account cannot touch the model registry or training data stores.</div>
+        </div>
+      </div>
+      <div class="prev-tools"><b>Tools &amp; tech:</b> AWS IAM · OAuth 2.0 · Azure Active Directory · API key scoping · OPA (Open Policy Agent)</div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t7-enc">
+    <div class="prev-card">
+      <div class="prev-head"><div class="prev-num">03</div><div class="prev-title">Encryption</div></div>
+      <div class="prev-body">
+        <div><div class="prev-col-title">Classical function</div><div class="prev-text">AES-256 at rest, TLS 1.3 in transit, PKI for certificate trust. Data is mathematically unreadable without the decryption key — useless to anyone who intercepts it. Key management (HSM, KMS) is as important as the encryption algorithm itself.</div></div>
+        <div>
+          <div class="threat-tag">AI Threat</div>
+          <div class="prev-col-title">In AI Systems</div>
+          <div class="prev-text">Model weights are worth billions in training investment — encrypt at rest with AES-256 (S3 SSE-KMS or Azure Blob encryption). All inference API calls enforced over TLS 1.3 — prompts may contain PII. Secure enclaves (Intel SGX, AMD SEV) run inference inside hardware-protected memory: even the cloud provider cannot extract the model. Homomorphic encryption lets you run inference on encrypted inputs without decrypting them.</div>
+        </div>
+      </div>
+      <div class="prev-tools"><b>Tools &amp; tech:</b> AWS KMS · Azure Key Vault · Intel SGX / AMD SEV · TLS 1.3 · HashiCorp Vault</div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t7-patch">
+    <div class="prev-card">
+      <div class="prev-head"><div class="prev-num">04</div><div class="prev-title">Patching &amp; Hardening</div></div>
+      <div class="prev-body">
+        <div><div class="prev-col-title">Classical function</div><div class="prev-text">Apply CVE patches promptly, remove unused services and open ports, enforce CIS benchmark or STIG configuration baselines to eliminate known weaknesses. Reduces attack surface systematically across all systems. Unpatched systems are the most common root cause in major breaches.</div></div>
+        <div>
+          <div class="threat-tag">AI Threat</div>
+          <div class="prev-col-title">In AI Systems</div>
+          <div class="prev-text">ML frameworks have real CVEs — TensorFlow and PyTorch have had remote code execution bugs. Remove all debug endpoints from production: Jupyter Notebook, MLflow UI, TensorBoard left exposed = instant RCE on a training server. Switch from pickle to safetensors format (pickle executes arbitrary code on load). Pin all dependency versions — drift enables supply chain attacks. Use minimal container base images for inference (distroless, no shell).</div>
+        </div>
+      </div>
+      <div class="prev-tools"><b>Tools &amp; tech:</b> Dependabot · Snyk · pip-audit · Docker CIS benchmark · safetensors · Trivy (container scanning)</div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t7-edr">
+    <div class="prev-card">
+      <div class="prev-head"><div class="prev-num">05</div><div class="prev-title">AV / EDR / XDR</div></div>
+      <div class="prev-body">
+        <div><div class="prev-col-title">Classical function</div><div class="prev-text">Antivirus uses signatures + heuristics. EDR (Endpoint Detection &amp; Response) adds live behavioral monitoring per endpoint and automated containment. XDR (Extended Detection &amp; Response) correlates signals across endpoint, network, identity, and cloud into one unified detection pipeline.</div></div>
+        <div>
+          <div class="threat-tag">AI Threat</div>
+          <div class="prev-col-title">In AI Systems</div>
+          <div class="prev-text">The pickle bomb: a malicious .pkl model file executes arbitrary OS code the moment torch.load() is called — always use weights_only=True or safetensors format. EDR on GPU inference servers catches cryptomining (attackers love unmonitored GPU clusters with expensive hardware). Scan every model downloaded from HuggingFace Hub or external sources with ModelScan before loading. XDR correlates model server behaviour with network logs to detect data exfiltration patterns.</div>
+        </div>
+      </div>
+      <div class="prev-tools"><b>Tools &amp; tech:</b> CrowdStrike Falcon · SentinelOne · ModelScan (HuggingFace) · safetensors scanner · Microsoft Defender for Endpoint</div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="t7-seg">
+    <div class="prev-card">
+      <div class="prev-head"><div class="prev-num">06</div><div class="prev-title">Network Segmentation / Zero Trust</div></div>
+      <div class="prev-body">
+        <div><div class="prev-col-title">Classical function</div><div class="prev-text">VLANs, DMZ, micro-segmentation divide the network into isolated zones. An attacker who breaches one zone cannot reach others. Zero Trust adds "never trust, always verify" — every request authenticated and authorised regardless of network source. Limits blast radius dramatically.</div></div>
+        <div>
+          <div class="threat-tag">AI Threat</div>
+          <div class="prev-col-title">In AI Systems</div>
+          <div class="prev-text">Separate training cluster (GPU-heavy, may need internet for data) from inference cluster (handles live user traffic) in different VPCs with strict firewall rules. Model registry sits on an internal subnet — never public. Zero Trust for MLOps: the inference server must authenticate to the model registry with a short-lived token even though both are "internal". Block outbound internet access from training jobs by default — models shouldn't phone home. Air-gap sensitive foundation models entirely in high-security environments.</div>
+        </div>
+      </div>
+      <div class="prev-tools"><b>Tools &amp; tech:</b> Kubernetes NetworkPolicy · AWS VPC · Istio service mesh · BeyondCorp Zero Trust · Zscaler ZTNA</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ─── NAVIGATION ───────────────────────────────────
+function showSection(id, link) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (link) link.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showTab(btn, paneId) {
+  const bar = btn.closest('.tab-bar');
+  const section = btn.closest('.section');
+  bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  section.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(paneId).classList.add('active');
+}
+
+// ─── DEFENCE IN DEPTH — ONION ─────────────────────
+const didLayers = {
+  7: {
+    name: "Physical Layer",
+    badge: "Outermost · Layer 7", bcolor: "#EF4444", bgc: "rgba(239,68,68,.15)",
+    desc: "Controls who can physically access buildings, server rooms, hardware, and cables. The first barrier — an attacker with physical access can bypass almost all digital controls. Often overlooked in cybersecurity assessments.",
+    controls: ["Biometric/badge access","Mantrap / airlock entry","CCTV surveillance","Security guards","Cable locks on hardware","Tamper-evident seals","Visitor logging","Secure media destruction (degaussing/shredding)"],
+    tools: ["Verkada","Genetec (CCTV)","HID (access control)"],
+    attack: ["T0812 (Default Credentials via physical)","T0816 (Device restart/shutdown)","Physical insider threat"],
+    threat: "Insider theft, rogue device (USB drop), physical tailgating, hardware implant"
+  },
+  6: {
+    name: "Perimeter Layer",
+    badge: "Outer Digital Border · Layer 6", bcolor: "#F97316", bgc: "rgba(249,115,22,.15)",
+    desc: "The boundary between your network and the internet. Traditional 'front door' of network security. In cloud/hybrid environments this layer is distributed — there's no single perimeter. Controls internet-facing exposure.",
+    controls: ["Next-Gen Firewall (NGFW)","Intrusion Prevention System (IPS)","Web Application Firewall (WAF)","Email Security Gateway","DNS Filtering","Egress filtering / proxy","VPN / ZTNA","DDoS protection"],
+    tools: ["Palo Alto NGFW","Cloudflare","Zscaler","Cisco Umbrella (DNS)","Proofpoint (email)","Akamai (DDoS)"],
+    attack: ["T1190 (Exploit Public App)","T1133 (External Remote Services)","T1566 (Phishing — email gateway)","T1071 (C2 over HTTP/DNS)","T1048 (Exfil over Alt Protocol)"],
+    threat: "Internet-facing exploit, phishing delivery, C2 beaconing, DDoS, web app attack"
+  },
+  5: {
+    name: "Network (Internal) Layer",
+    badge: "Internal Traffic Control · Layer 5", bcolor: "#F59E0B", bgc: "rgba(245,158,11,.15)",
+    desc: "Controls how traffic moves inside the network. Prevents lateral movement — the most critical post-breach control. A flat network means one breach = total compromise. Segmentation limits blast radius significantly.",
+    controls: ["Network Segmentation / VLANs","Micro-segmentation","Internal Firewall (east-west traffic)","Network Detection & Response (NDR)","Network Access Control (NAC)","IDS (internal)","Traffic encryption (TLS/IPSec)","SD-WAN with security policies"],
+    tools: ["Illumio (micro-seg)","Darktrace (NDR)","Vectra AI","Cisco ISE (NAC)","Zeek / Suricata (IDS)"],
+    attack: ["T1021 (Remote Services)","T1046 (Network Scanning)","T1040 (Network Sniffing)","T1570 (Lateral Tool Transfer)"],
+    threat: "Lateral movement, internal reconnaissance, man-in-the-middle, worm propagation"
+  },
+  4: {
+    name: "Endpoint Layer",
+    badge: "Device-level Control · Layer 4", bcolor: "#10B981", bgc: "rgba(16,185,129,.15)",
+    desc: "Every device (laptop, server, VM, container) is a potential attack surface. Endpoint controls detect, block, and respond at the execution point — closest to where attacker code actually runs. The last line before the attacker has a foothold.",
+    controls: ["Endpoint Detection & Response (EDR)","Antivirus / Anti-malware","Application Whitelisting / WDAC","Host-based Firewall","Patch Management","Full Disk Encryption","USB/port control","OS hardening (CIS Benchmarks)","Vulnerability scanning"],
+    tools: ["CrowdStrike Falcon","SentinelOne","Microsoft Defender for Endpoint","Carbon Black","Tanium","Qualys / Tenable (vuln scan)"],
+    attack: ["T1059 (Scripting)","T1055 (Process Injection)","T1053 (Scheduled Tasks)","T1547 (Boot Autostart)","T1003 (Credential Dumping)","T1027 (Obfuscation)"],
+    threat: "Malware execution, fileless attacks, persistence mechanisms, credential dumping"
+  },
+  3: {
+    name: "Application Layer",
+    badge: "Code & App Security · Layer 3", bcolor: "#06B6D4", bgc: "rgba(6,182,212,.15)",
+    desc: "Security built into applications and enforced at the app level. Covers both internally developed apps and third-party software. Attackers exploit weak apps as initial access vectors or for privilege escalation.",
+    controls: ["Secure SDLC (security in dev lifecycle)","SAST (Static Analysis)","DAST (Dynamic Analysis)","SCA (Software Composition Analysis)","WAF (app-layer)","Input validation / parameterised queries","API security gateway","Dependency scanning","Container image scanning","Runtime Application Self-Protection (RASP)"],
+    tools: ["Snyk (SCA/SAST)","Checkmarx","Burp Suite (DAST)","OWASP ZAP","Veracode","AWS WAF / ModSecurity"],
+    attack: ["T1190 (Exploit Public-Facing App)","T1059 (Script in app)","T1505 (Server Software Component)","T1195 (Supply Chain — dependencies)"],
+    threat: "SQL injection, XSS, broken auth, vulnerable dependencies, API abuse, SSRF"
+  },
+  2: {
+    name: "Identity Layer",
+    badge: "Who You Are · Layer 2", bcolor: "#7C3AED", bgc: "rgba(124,58,237,.15)",
+    desc: "The most attacked layer in modern environments. With cloud and remote work, identity IS the perimeter. Attackers target credentials to impersonate legitimate users and bypass all other controls entirely.",
+    controls: ["Multi-Factor Authentication (MFA)","Single Sign-On (SSO)","Privileged Access Management (PAM)","Identity Governance (IGA)","Conditional Access (device/location/risk-based)","User & Entity Behaviour Analytics (UEBA)","Just-In-Time (JIT) privilege","Password Manager / Vault","Account lifecycle management"],
+    tools: ["Microsoft Entra ID (AAD)","Okta","CyberArk (PAM)","BeyondTrust","SailPoint (IGA)","Varonis (UEBA)"],
+    attack: ["T1078 (Valid Accounts)","T1110 (Brute Force)","T1098 (Account Manipulation)","T1556 (Modify Auth Process)","T1606 (Forge Web Credentials)","T1134 (Token Impersonation)"],
+    threat: "Credential stuffing, pass-the-hash, MFA fatigue, account takeover, privilege escalation"
+  },
+  1: {
+    name: "Data Layer",
+    badge: "Innermost Crown Jewel · Layer 1", bcolor: "#2D7FEA", bgc: "rgba(45,127,234,.15)",
+    desc: "The ultimate thing you're protecting. All other layers exist to defend the data. Even if every other layer is bypassed, strong data controls can prevent the attacker from using or exfiltrating what they find.",
+    controls: ["Data Classification (public/internal/confidential/secret)","Encryption at rest (AES-256)","Encryption in transit (TLS 1.3)","Data Loss Prevention (DLP)","Digital Rights Management (DRM)","Database Activity Monitoring (DAM)","Immutable backups (3-2-1 rule)","Data masking / tokenisation","Audit logging on all data access"],
+    tools: ["Microsoft Purview (DLP/classification)","Varonis","Symantec DLP","Imperva (DAM)","Veeam (backup)"],
+    attack: ["T1486 (Encrypt for Impact — ransomware)","T1048 (Exfiltration)","T1005 (Data from Local System)","T1114 (Email Collection)","T1530 (Cloud Storage Object)"],
+    threat: "Ransomware, data exfiltration, data destruction, insider data theft, cloud misconfiguration"
+  }
+};
+
+function selectLayer(n) {
+  document.querySelectorAll('.ring').forEach(r => r.classList.remove('sel'));
+  const ring = document.getElementById('ring' + n);
+  if (ring) ring.classList.add('sel');
+  const L = didLayers[n];
+  const panel = document.getElementById('did-detail-panel');
+  const attStr = L.attack.map(a => `<span class="att-pill">${a}</span>`).join(' ');
+  const toolStr = L.tools.map(t => `<span class="tool-pill">${t}</span>`).join('');
+  const ctrlStr = L.controls.map(c => `<div class="pt"><div class="dot" style="background:${L.bcolor}"></div><span>${c}</span></div>`).join('');
+  panel.innerHTML = `
+    <div class="dp-title">${L.name}</div>
+    <div class="dp-badge" style="background:${L.bgc};color:${L.bcolor}">${L.badge}</div>
+    <div class="dp-desc">${L.desc}</div>
+    <div class="dp-threat">Primary threat: ${L.threat}</div>
+    <div style="margin-bottom:10px"><div class="lbl">Controls</div><div class="pts">${ctrlStr}</div></div>
+    <div style="margin-bottom:10px"><div class="lbl">Tools</div><div class="tool-pills">${toolStr}</div></div>
+    <div><div class="lbl">ATT&CK techniques addressed</div><div class="tool-pills">${attStr}</div></div>
+  `;
+}
+
+// ─── CLASSICAL CONTROLS INTERACTIVE ───────────────
+const cats = [
+  { name: 'Preventive', color: '#2D7FEA', dot: '#93C5FD' },
+  { name: 'Detective', color: '#F97316', dot: '#FCA874' },
+  { name: 'Corrective', color: '#10B981', dot: '#6EE7B7' },
+  { name: 'Administrative', color: '#7C3AED', dot: '#C4B5FD' }
+];
+
+const terms = [
+  { cat: 0, name: 'Firewalls', why: 'First perimeter barrier', fn: 'Filters traffic by rules — allow or deny packets/sessions. Stateful inspection. WAF inspects HTTP payloads for attack patterns.', best: 'Network edge; between untrusted internet and internal LAN' },
+  { cat: 0, name: 'Access Control', why: 'Limit who can touch what', fn: 'MFA, RBAC, SSO, least-privilege — enforce identity before granting resource access. Role-based permissions by job function.', best: 'Cloud IAM, Active Directory, privileged account protection' },
+  { cat: 0, name: 'Encryption', why: 'Data useless without key', fn: 'AES-256 at rest, TLS 1.3 in transit, PKI for trust — scrambles data end-to-end. Key management is equally critical.', best: 'Databases, email, APIs, storage — anywhere data leaves your perimeter' },
+  { cat: 0, name: 'Patching & Hardening', why: 'Attackers exploit known flaws', fn: 'Apply CVE patches, remove unused services, enforce CIS/STIG config baselines. Unpatched systems = most common breach root cause.', best: 'All systems — especially internet-facing; monthly cycles minimum' },
+  { cat: 0, name: 'AV / EDR / XDR', why: 'Catch malware on the device', fn: 'Signature + heuristic scanning; EDR adds behavior monitoring and automated response; XDR correlates across endpoint + network + cloud.', best: 'All endpoints, servers; XDR correlates across the whole estate' },
+  { cat: 0, name: 'Segmentation', why: 'Limit blast radius', fn: 'VLANs, DMZ, micro-segmentation — attackers who breach one zone can\'t reach others. Critical for stopping ransomware spread.', best: 'Critical assets (OT/SCADA, PII, finance) isolated from general network' },
+  { cat: 1, name: 'SIEM', why: 'Visibility across the whole org', fn: 'Aggregates logs from all sources, correlates events, fires alerts on anomalies. SOC\'s primary tool. Enables threat hunting.', best: '24/7 SOC monitoring; compliance reporting; threat hunting baseline' },
+  { cat: 1, name: 'IDS / IPS', why: 'Catch live attacks in the wire', fn: 'IDS alerts on suspicious traffic; IPS actively blocks it inline — signature + anomaly detection. Requires careful tuning.', best: 'Core network backbone, cloud gateways, between DMZ and internal' },
+  { cat: 1, name: 'Vuln Scanning', why: 'Find holes before hackers do', fn: 'Automated scan (Nessus/OpenVAS) + pen testing reveals unpatched CVEs and misconfigs. "Find before attackers do" principle.', best: 'Weekly automated scans; annual pen test; after every major change' },
+  { cat: 1, name: 'Audit & Logging', why: 'Evidence trail for everything', fn: 'Syslog, Windows Events, CloudTrail — tamper-proof record of who did what, when. Essential for forensics and compliance.', best: 'Legal compliance (SOC 2, HIPAA); forensic investigation; insider threat detection' },
+  { cat: 1, name: 'Honeypots', why: 'Detect attackers doing recon', fn: 'Fake servers/services lure attackers; any hit on a honeypot = confirmed malicious intent. Zero false positives.', best: 'Internal networks to catch lateral movement; threat intel collection' },
+  { cat: 1, name: 'DLP', why: 'Stop data walking out the door', fn: 'Inspects emails, uploads, USBs — blocks or alerts when sensitive data leaves the org. Enforces data classification policy.', best: 'Finance, healthcare, legal sectors; cloud SaaS environments (O365, GDrive)' },
+  { cat: 2, name: 'Incident Response', why: 'Minimize breach damage fast', fn: 'NIST lifecycle: Prepare → Identify → Contain → Eradicate → Recover → Lessons Learned. Speed of containment determines breach cost.', best: 'Every org needs an IR plan; activate on any confirmed breach or significant anomaly' },
+  { cat: 2, name: 'BCP / DR', why: 'Keep business alive after disaster', fn: 'Backups, failover sites (hot/warm/cold), defined RTO (downtime limit) and RPO (data-loss limit). Test regularly via drills.', best: 'Ransomware, datacenter outage, natural disaster — test quarterly minimum' },
+  { cat: 2, name: 'Forensics', why: 'Understand exactly what happened', fn: 'Disk/memory imaging, chain of custody, timeline reconstruction, root cause analysis. Supports legal proceedings.', best: 'Post-breach legal proceedings; understanding attacker TTPs; preventing recurrence' },
+  { cat: 3, name: 'Policies & Standards', why: 'Defines what "secure" means', fn: 'AUP, password policy, ISO 27001, NIST CSF, SOC 2, GDPR — rules everyone must follow. Foundation for all technical controls.', best: 'Foundation layer — technical controls mean nothing without policy backing them' },
+  { cat: 3, name: 'Security Awareness', why: 'Humans are the weakest link', fn: 'Phishing simulation, mandatory training, social engineering tests — builds security culture. ~80% of breaches involve human element.', best: 'All staff, especially finance/HR/executives who are prime phishing targets' },
+  { cat: 3, name: 'Risk Management', why: 'Prioritize limited resources', fn: 'Risk register, Business Impact Analysis, vendor assessments, third-party audits — quantify and treat risk. Guides investment decisions.', best: 'Before every major project, vendor onboarding, or audit cycle' }
+];
+
+let activeCat2 = null, activeTerm2 = null;
+
+function renderCtrls() {
+  const tabsEl = document.getElementById('ctrlCatTabs2');
+  const gridEl = document.getElementById('ctrlGrid2');
+  const detailEl = document.getElementById('ctrlDetail2');
+  if (!tabsEl || !gridEl) return;
+
+  tabsEl.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'cat-btn' + (activeCat2 === null ? ' active' : '');
+  allBtn.textContent = 'All';
+  allBtn.onclick = () => { activeCat2 = null; activeTerm2 = null; renderCtrls(); };
+  tabsEl.appendChild(allBtn);
+
+  cats.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.className = 'cat-btn' + (activeCat2 === i ? ' active' : '');
+    b.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${c.dot};margin-right:5px"></span>${c.name}`;
+    b.onclick = () => { activeCat2 = i; activeTerm2 = null; renderCtrls(); };
+    tabsEl.appendChild(b);
+  });
+
+  gridEl.innerHTML = '';
+  const list = activeCat2 === null ? terms : terms.filter(t => t.cat === activeCat2);
+  list.forEach(t => {
+    const d = document.createElement('div');
+    d.className = 'ctrl-card' + (activeTerm2 === t ? ' active' : '');
+    d.innerHTML = `<div class="ctrl-name"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${cats[t.cat].dot};margin-right:5px"></span>${t.name}</div><div class="ctrl-cat">${cats[t.cat].name}</div>`;
+    d.onclick = () => { activeTerm2 = (activeTerm2 === t ? null : t); renderCtrls(); };
+    gridEl.appendChild(d);
+  });
+
+  if (!activeTerm2) {
+    detailEl.innerHTML = '<div class="ctrl-empty">← Click any control to see details</div>';
+  } else {
+    const t = activeTerm2;
+    detailEl.innerHTML = `
+      <div class="ctrl-detail-title"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${cats[t.cat].dot};margin-right:7px"></span>${t.name}</div>
+      <div class="ctrl-rows">
+        <span class="ctrl-label">Why</span><span class="ctrl-val">${t.why}</span>
+        <span class="ctrl-label">Function</span><span class="ctrl-val">${t.fn}</span>
+        <span class="ctrl-label">Best use</span><span class="ctrl-val">${t.best}</span>
+        <span class="ctrl-label">Category</span><span class="ctrl-val">${cats[t.cat].name}</span>
+      </div>`;
+  }
+}
+
+// ─── PREVENTIVE CONTROLS CARDS (S7 all tab) ────────
+const prevData = [
+  { num: '01', name: 'Firewall / WAF',
+    classical: 'Filters network traffic by rules — allow/deny by IP, port, protocol. Stateful inspection tracks active sessions. WAF inspects HTTP payloads for attack patterns such as SQL injection, XSS, and command injection.',
+    threat: 'AI threat: oversized payloads, unauthenticated model access, prompt injection via HTTP, outbound data leakage in model responses',
+    ai: 'AI API gateway acts as the model\'s perimeter. Rate-limits requests per user/API key. WAF rules pattern-match prompt injection strings in request bodies (e.g. "ignore previous instructions", "DAN mode"). Blocks oversized inputs designed to overflow model context windows. Also filters outbound responses to prevent data leakage.',
+    tools: 'AWS API Gateway · Cloudflare WAF · NGINX · Azure API Management' },
+  { num: '02', name: 'Access Control (RBAC / MFA)',
+    classical: 'MFA, RBAC, SSO, least privilege — verify identity first, then grant only the minimum access needed. Role-based access assigns permissions by job function, not individual.',
+    threat: 'AI threat: unauthorized model querying, weight extraction, training data access, model registry poisoning',
+    ai: 'Model RBAC creates 4 tiers: (1) End user — query only. (2) ML engineer — fine-tune. (3) Data scientist — training data access. (4) Admin — model weights and registry. Query attribution logs every prompt with the user ID. Least privilege: a chatbot service account cannot touch the model registry.',
+    tools: 'AWS IAM · OAuth 2.0 · Azure Active Directory · API key scoping · OPA' },
+  { num: '03', name: 'Encryption',
+    classical: 'AES-256 at rest, TLS 1.3 in transit, PKI for certificate trust. Data is mathematically unreadable without the decryption key — useless to anyone who intercepts it.',
+    threat: 'AI threat: model IP theft (weights = billions in value), sensitive prompt interception, training data leaks via API',
+    ai: 'Model weights encrypted at rest (S3 SSE-KMS / Azure Blob encryption). All inference API calls enforced over TLS 1.3 — prompts may contain PII. Secure enclaves (Intel SGX, AMD SEV) run inference in hardware-protected memory — even the cloud provider cannot extract the model. Homomorphic encryption allows inference on encrypted inputs.',
+    tools: 'AWS KMS · Azure Key Vault · Intel SGX / AMD SEV · TLS 1.3' },
+  { num: '04', name: 'Patching & Hardening',
+    classical: 'Apply CVE patches promptly, remove unused services and open ports, enforce CIS benchmark or STIG configuration baselines to eliminate known weaknesses.',
+    threat: 'AI threat: RCE via ML framework CVEs (TensorFlow, PyTorch), exposed debug UIs (Jupyter, MLflow), malicious model deserialization via pickle',
+    ai: 'ML frameworks have real CVEs — TensorFlow and PyTorch have had remote code execution bugs. Remove all debug endpoints from production: Jupyter Notebook, MLflow UI, TensorBoard left open = instant RCE on a training server. Switch from pickle to safetensors format. Pin all dependency versions. Use minimal container base images (distroless).',
+    tools: 'Dependabot · Snyk · pip-audit · Docker CIS benchmark · safetensors · Trivy' },
+  { num: '05', name: 'AV / EDR / XDR',
+    classical: 'Antivirus uses signatures + heuristics. EDR adds live behavioral monitoring per endpoint and automated containment. XDR correlates signals across endpoint, network, identity, and cloud.',
+    threat: 'AI threat: pickle bombs in model files, GPU hijacking for cryptomining, model server compromise via supply chain',
+    ai: 'The pickle bomb: a malicious .pkl model file executes arbitrary OS code the moment torch.load() is called. Always use weights_only=True or safetensors. EDR on GPU inference servers catches cryptomining (attackers love unmonitored GPU clusters). Scan every model downloaded from HuggingFace Hub or external sources. XDR correlates model server behavior with network logs to detect exfiltration.',
+    tools: 'CrowdStrike Falcon · SentinelOne · ModelScan (HuggingFace) · safetensors scanner' },
+  { num: '06', name: 'Network Segmentation / Zero Trust',
+    classical: 'VLANs, DMZ, micro-segmentation divide the network into isolated zones. Attackers who breach one zone can\'t reach others. Zero Trust adds "never trust, always verify" at every access decision.',
+    threat: 'AI threat: training cluster compromise enabling lateral movement to production, model registry exposure, GPU cluster as pivot point',
+    ai: 'Separate training cluster from inference cluster in different VPCs. Model registry sits on internal subnet — never public. Zero Trust for MLOps: inference server must authenticate to model registry with short-lived token even when both are "internal". Block outbound internet access from training jobs by default. Air-gap sensitive foundation models in high-security environments.',
+    tools: 'Kubernetes NetworkPolicy · AWS VPC · Istio service mesh · BeyondCorp Zero Trust · Zscaler' }
+];
+
+function renderPrevCtrls() {
+  const container = document.getElementById('prevCtrlsContainer');
+  if (!container) return;
+  container.innerHTML = prevData.map(c => `
+    <div class="prev-card">
+      <div class="prev-head">
+        <div class="prev-num">${c.num}</div>
+        <div class="prev-title">${c.name}</div>
+      </div>
+      <div class="prev-body">
+        <div>
+          <div class="prev-col-title">Classical function</div>
+          <div class="prev-text">${c.classical}</div>
+        </div>
+        <div>
+          <div class="threat-tag">${c.threat.split(':')[0]}</div>
+          <div class="prev-col-title">In AI systems</div>
+          <div class="prev-text">${c.ai}</div>
+        </div>
+      </div>
+      <div class="prev-tools"><b>Tools &amp; tech:</b> ${c.tools}</div>
+    </div>
+  `).join('');
+}
+
+// ─── INIT ─────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderCtrls();
+  renderPrevCtrls();
+});
+</script>
+</body>
+</html>
